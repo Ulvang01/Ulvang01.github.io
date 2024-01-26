@@ -3,7 +3,11 @@ import * as THREE from 'three';
 export class Map {
     constructor() {
         this.geometry = new THREE.PlaneGeometry(100, 100);
-        this.material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+        this.material = new THREE.MeshStandardMaterial({ 
+            color: 0x00ff00,
+            roughness: 0.6,
+            metalness: 0.1,s
+         });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.set(0, -1, 0);
         this.mesh.rotation.x = -Math.PI * 0.5;
