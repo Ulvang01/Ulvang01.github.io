@@ -10,7 +10,7 @@ export class Map {
             roughness: 1,
             metalness: 0,
         });
-        const texture = new THREE.TextureLoader().load('/js/pictures/grass.jpg');
+        const texture = new THREE.TextureLoader().load('/pictures/grass.jpg');
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(100, 100);

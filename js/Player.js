@@ -11,7 +11,7 @@ export class Player {
         this.walkAction;
         this.stillAction;
         const gltfLoader = new GLTFLoader();
-        gltfLoader.load('/js/models/person.glb', (gltf) => {
+        gltfLoader.load('/models/person.glb', (gltf) => {
             const model = gltf.scene;
             person.add(model);
             this.mixer = new THREE.AnimationMixer(model);

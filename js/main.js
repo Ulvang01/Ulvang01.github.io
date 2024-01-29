@@ -86,7 +86,7 @@ async function init() {
     scene.add(map.mesh);
 
     const fontLoader = new MyFontLoader();
-    fontLoader.loadFont("/js/fonts/Cabin_Regular.json");
+    fontLoader.loadFont("/fonts/Cabin_Regular.json");
     while (fontLoader.getFont() == null) {
         await new Promise(r => setTimeout(r, 100));
     }
@@ -136,13 +136,13 @@ async function init() {
 
     const button = new Button("GithubButton", new THREE.Vector2(2, 1));
     button.setPos(-8, -0.9, 5);
-    button.setPicTexture("/js/pictures/GitHub_Logo_White.png");
+    button.setPicTexture("/pictures/GitHub_Logo_White.png");
     buttonGroup.add(button);
     scene.add(buttonGroup);
 
     const gltfLoader = new GLTFLoader();
     const pillarAlcoa = new THREE.Group();
-    gltfLoader.load('/js/models/pillarAlcoa.glb', (gltf) => {
+    gltfLoader.load('/models/pillarAlcoa.glb', (gltf) => {
         gltf.scene.traverse((child) => {
             child.layers.enable(1);
             child.castShadow = true;
@@ -160,7 +160,7 @@ async function init() {
     } );
 
     const pillarElkjop = new THREE.Group();
-    gltfLoader.load('/js/models/pillarElkjop.glb', (gltf) => {
+    gltfLoader.load('/models/pillarElkjop.glb', (gltf) => {
         gltf.scene.traverse((child) => {
             child.layers.enable(1);
             child.castShadow = true;
@@ -217,7 +217,7 @@ async function init() {
     scene.add(elkjopText);
 
     const skillGroup = new THREE.Group();
-    gltfLoader.load('/js/models/wallOfProgSkills.glb', (gltf) => {
+    gltfLoader.load('/models/wallOfProgSkills.glb', (gltf) => {
         gltf.scene.traverse((child) => {
             child.layers.enable(1);
             child.castShadow = true;
