@@ -2,13 +2,17 @@
   "name": "mywebsite",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://Ulvang01.github.io/",
   "type": "module",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.1",
     "vite": "^4.3.2"
   },
   "dependencies": {
