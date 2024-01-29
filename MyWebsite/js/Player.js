@@ -1,17 +1,31 @@
 import * as THREE from "three";
 import { Vector2 } from "three";
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export class Player {
+
     constructor() {
-        this.geometry = new THREE.BoxGeometry(1, 1, 1);
-        this.material = new THREE.MeshStandardMaterial({ color: 0x271f86 });
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.position.set(0, 0, 0);
+        const person = new THREE.Group();
+        person.type = "player";
+        this.mixer;
+        this.walkAction;
+        this.stillAction;
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load('/js/models/person.glb', (gltf) => {
+            const model = gltf.scene;
+            person.add(model);
+            this.mixer = new THREE.AnimationMixer(model);
+            this.walkAction = this.mixer.clipAction(gltf.animations[3]);
+            this.stillAction = this.mixer.clipAction(gltf.animations[1]);
+        });
+        this.mesh = person;
+        this.mesh.scale.set(0.6, 0.6, 0.6);
+        this.mesh.position.set(0, 2, 0);
         this.speed = new Vector2(0, 0);
         this.isPickedUp = false;
-        this.maxSpeed = 0.5;
-        this.acceleration = 0.1;
-        this.deacceleration = 0.2;
+        this.maxSpeed = 0.2;
+        this.acceleration = 0.05;
+        this.deacceleration = 0.1;
 
         this.up = false;
         this.down = false;
@@ -68,6 +82,21 @@ export class Player {
             }
         }
 
+        if (Math.abs(this.speed.x) > 0.01 || Math.abs(this.speed.y) > 0.01){
+            this.mesh.rotation.y = -Math.atan2(this.speed.y, this.speed.x) + Math.PI * 0.5;
+        }
+    
+        if (this.mixer != undefined) {
+            this.mixer.update(0.15 * Math.sqrt(this.speed.x * this.speed.x + this.speed.y * this.speed.y));
+            if (Math.sqrt(this.speed.x * this.speed.x + this.speed.y * this.speed.y) == 0){
+                this.walkAction.stop();
+                this.stillAction.play();
+            }
+            else {
+                this.stillAction.stop();
+                this.walkAction.play();
+            }
+        }
 
         this.mesh.position.x += this.speed.x;
         this.mesh.position.z += this.speed.y;
@@ -83,12 +112,12 @@ export class Player {
 
     pickUp() {
         this.isPickedUp = true;
-        this.mesh.position.y += 2;
+        this.mesh.position.y = 4;
     }
 
     drop() {
         this.isPickedUp = false;
-        this.mesh.position.y -= 2;
+        this.mesh.position.y = 2;
     }
 
     setPos(x, y, z) {

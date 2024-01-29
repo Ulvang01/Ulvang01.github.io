@@ -3,9 +3,9 @@ import * as THREE from 'three';
 export class Button extends THREE.Mesh{
     isHovered = false;
 
-    constructor(name) {
+    constructor(name, size) {
         super();
-        this.geometry = new THREE.PlaneGeometry(2, 1);
+        this.geometry = new THREE.PlaneGeometry(size.x, size.y);
         this.material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1, color: 0xffffff});
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.position.set(0, -1, 0);
@@ -13,22 +13,29 @@ export class Button extends THREE.Mesh{
         this.name = name;
         this.layers.set(1);
 
-        this.linematerial = new THREE.LineBasicMaterial({ color: 0x000000 });
-        this.points = [];
-        this.points.push(new THREE.Vector3(-1, 0, 0.2));
-        this.points.push(new THREE.Vector3(-1, 0, 1.8));
-        this.points.push(new THREE.Vector3(1, 0, 1.8));
-        this.points.push(new THREE.Vector3(1, 0, 0.2));
-        this.points.push(new THREE.Vector3(-1, 0, 0.2));
-    
+        const bordergeometry = new THREE.BoxGeometry(size.x + 0.1, 0.1, 0.1);
+        const bordermaterial = new THREE.MeshStandardMaterial({ transparent: true, opacity: 1, color: 0x34363b});
+        const bordermesh = new THREE.Mesh(bordergeometry, bordermaterial);
+        bordermesh.position.set(0, -size.y / 2, 0);
+        this.add(bordermesh);
 
-        this.linegeometry = new THREE.BufferGeometry().setFromPoints(this.points);
+        const bordergeometry2 = new THREE.BoxGeometry(size.x + 0.1, 0.1, 0.1);
+        const bordermaterial2 = new THREE.MeshStandardMaterial({ transparent: true, opacity: 1, color: 0x34363b});
+        const bordermesh2 = new THREE.Mesh(bordergeometry2, bordermaterial2);
+        bordermesh2.position.set(0, size.y / 2, 0);
+        this.add(bordermesh2);
 
-        this.line = new THREE.Line(this.linegeometry, this.linematerial);
-        this.line.position.set(0, -1, 0);
-        this.line.rotation.x = -Math.PI * 0.5;
+        const bordergeometry3 = new THREE.BoxGeometry(0.1, size.y + 0.1, 0.1);
+        const bordermaterial3 = new THREE.MeshStandardMaterial({ transparent: true, opacity: 1, color: 0x34363b});
+        const bordermesh3 = new THREE.Mesh(bordergeometry3, bordermaterial3);
+        bordermesh3.position.set(-size.x / 2, 0, 0);
+        this.add(bordermesh3);
 
-        this.add(this.line);
+        const bordergeometry4 = new THREE.BoxGeometry(0.1, size.y + 0.1, 0.1);
+        const bordermaterial4 = new THREE.MeshStandardMaterial({ transparent: true, opacity: 1, color: 0x34363b});
+        const bordermesh4 = new THREE.Mesh(bordergeometry4, bordermaterial4);
+        bordermesh4.position.set(size.x / 2, 0, 0);
+        this.add(bordermesh4);
     }
 
     setPos(x, y, z) {

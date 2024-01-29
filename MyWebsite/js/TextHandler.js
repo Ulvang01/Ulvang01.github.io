@@ -73,4 +73,8 @@ export class Text3D extends THREE.Mesh{
     setMaterial(material) {
         this.material = material;
     }
+
+    setColor(colorHex) {
+        this.material.color = new THREE.Color(colorHex);
+    }
 };
