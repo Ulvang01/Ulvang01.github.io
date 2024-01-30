@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import { Vector2 } from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { boundingBox } from './BoundingBox.js';
 
-export class Player {
+export class Player{
 
     constructor() {
         const person = new THREE.Group();
@@ -26,6 +27,13 @@ export class Player {
         this.maxSpeed = 0.2;
         this.acceleration = 0.05;
         this.deacceleration = 0.1;
+
+        this.boundingBox = new THREE.Box3();
+        this.boundingBox.setFromCenterAndSize(
+            new THREE.Vector3(this.mesh.position.x, this.mesh.position.y, this.mesh.position.z),
+            new THREE.Vector3(2,4,2)
+        );
+        this.boundingBox.type = "player";
 
         this.up = false;
         this.down = false;
@@ -98,8 +106,11 @@ export class Player {
             }
         }
 
+        checkforCollision();
+
         this.mesh.position.x += this.speed.x;
         this.mesh.position.z += this.speed.y;
+
     }
 
     setSpeed(speed) {
@@ -122,5 +133,13 @@ export class Player {
 
     setPos(x, y, z) {
         this.mesh.position.set(x, y, z);
+    }
+
+    checkforCollision() {
+        this.boundingBox.setFromCenterAndSize(
+            new THREE.Vector3(this.mesh.position.x + this.speed.x, this.mesh.position.y, this.mesh.position.z),
+            new THREE.Vector3(2,4,2)
+        );
+        
     }
 }

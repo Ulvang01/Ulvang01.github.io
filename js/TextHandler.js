@@ -33,6 +33,10 @@ export class Text3D extends THREE.Mesh{
         this.material = new THREE.MeshStandardMaterial({ color: 0x000000 });
         this.position.set(0, 0, 0);
         this.rotation.x = -Math.PI * 0.4;
+
+        this.bounds = new THREE.Box3().setFromObject(this);
+        this.bounds.getCenter(this.position);
+        this.bounds.type = "Text3D";
     }
 
     setText(text) {

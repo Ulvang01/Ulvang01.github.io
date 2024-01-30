@@ -5,7 +5,7 @@ import { Map } from './Map.js';
 import { MyFontLoader } from './FontLoader.js';
 import { Camera } from './Camera.js';
 import { Text3D } from './TextHandler.js';
-import { checkCollision } from './BoundingBox.js';
+import { boundingBox } from './BoundingBox.js';
 import { Player } from './Player.js';
 import { Button } from './Button.js';
 import { addDiv } from './TextPrompt.js';
@@ -30,7 +30,6 @@ var scene;
 var camera;
 var map;
 var player;
-var collisionChecker;
 
 var up;
 var down;
@@ -78,8 +77,8 @@ async function init() {
     bloomPass.layers = 2;
     composer.addPass( bloomPass );
 
-    const mainLight = new THREE.PointLight(0xffffff, 14000, 100000);
-    mainLight.position.set(0, 100, 0);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1, 100);
+    mainLight.position.set(0, 100, 10);
     scene.add(mainLight);
 
     map = new Map();
@@ -259,6 +258,10 @@ async function init() {
     player = new Player();
     scene.add(player.mesh);
 
+    const helper = new THREE.Box3Helper(player.boundingBox, 0xffff00);
+    scene.add(helper);
+
+
     renderer.render(scene, camera);
     running = true;
     tick();
@@ -270,7 +273,6 @@ function tick() {
     if (!running) {
         return;
     }
-
     move();
 }
 
@@ -343,6 +345,7 @@ window.addEventListener('keydown', (event) => {
     }
     if (event.key == "p") {
         console.log(player.mesh.position);
+        console.log(player.boundingBox);
     }
 });
 
