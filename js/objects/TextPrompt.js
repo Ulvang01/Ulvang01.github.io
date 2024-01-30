@@ -1,6 +1,9 @@
 var promtpsDiv = document.querySelector(".prompts");
 
 export function addDiv(name) {
+    if (name == "loading") {
+        promtpsDiv.innerHTML += loadingText;
+    }
     if (name == "alcoa") {
         promtpsDiv.innerHTML += alcoaText;
     }
@@ -12,6 +15,15 @@ export function addDiv(name) {
 export function deleteDiv() {
     promtpsDiv.innerHTML = "";
 }
+
+const loadingText = `
+<div class="textPrompt">
+    <div class="textPrompt_title">
+        <p>Loading ...</p>
+    </div>
+</div>
+`;
+
 
 const alcoaText = `
 <div class="textPrompt">

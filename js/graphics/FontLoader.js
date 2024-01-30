@@ -8,13 +8,18 @@ export class MyFontLoader {
         this.loader = new FontLoader();
     }
 
+    getProgress() {
+        return this.loader.loadProgress;
+    }
+
     loadFont(fontName) {
         console.log("loading font: " + fontName);
         this.loader.load(fontName, function (font) {
-            console.log("font loaded");
             MyFontLoader.font = font;
         });
     }
+
+
 
     getFont() {
         return MyFontLoader.font;

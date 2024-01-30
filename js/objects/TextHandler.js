@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-import { MyFontLoader } from './FontLoader.js';
+import { MyFontLoader } from '../graphics/FontLoader.js';
 import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 
 
