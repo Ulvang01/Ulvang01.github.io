@@ -1,9 +1,8 @@
 import * as THREE from "three";
-import { Vector2 } from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { boundingBox } from './BoundingBox.js';
+import { AABB } from "../utils/AABB";
 
-export class Player{
+export class Player {
 
     constructor() {
         const person = new THREE.Group();
@@ -14,36 +13,49 @@ export class Player{
         const gltfLoader = new GLTFLoader();
         gltfLoader.load('/models/person.glb', (gltf) => {
             const model = gltf.scene;
+            model.scale.set(0.6, 0.6, 0.6);
             person.add(model);
             this.mixer = new THREE.AnimationMixer(model);
             this.walkAction = this.mixer.clipAction(gltf.animations[3]);
-            this.stillAction = this.mixer.clipAction(gltf.animations[1]);
+            this.stillAction = this.mixer.clipAction(gltf.animations[2]);
         });
         this.mesh = person;
-        this.mesh.scale.set(0.6, 0.6, 0.6);
-        this.mesh.position.set(0, 2, 0);
-        this.speed = new Vector2(0, 0);
-        this.isPickedUp = false;
+        this.mesh.position.set(0, 4, 0);
+
+        this.speed = new THREE.Vector2(0, 0);
+        this.fallingSpeed = 0;
         this.maxSpeed = 0.2;
         this.acceleration = 0.05;
         this.deacceleration = 0.1;
 
-        this.boundingBox = new THREE.Box3();
-        this.boundingBox.setFromCenterAndSize(
-            new THREE.Vector3(this.mesh.position.x, this.mesh.position.y, this.mesh.position.z),
-            new THREE.Vector3(2,4,2)
-        );
-        this.boundingBox.type = "player";
+        this.aabb = new AABB(this.mesh.position, 
+            new THREE.Vector3(1.2,3,1.2));
+        this.aabb.type = "player";
+        console.log(this.aabb.size.x, this.aabb.size.y, this.aabb.size.z);
+        this.hitgeometry = new THREE.BoxGeometry(this.aabb.size.x, this.aabb.size.y, this.aabb.size.z);
+        this.hitmaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.2, transparent: true});
+        this.hitcube = new THREE.Mesh(this.hitgeometry, this.hitmaterial);
+        this.hitcube.name = "hitcube"
+        this.hitcube.layers.set(9);
+        person.add(this.hitcube);
+
 
         this.up = false;
         this.down = false;
         this.left = false;
         this.right = false;
+        this.grounded = false;
     }
 
     move() {
         if (this.isPickedUp) {
             return;
+        }
+        if (!this.grounded) {
+            this.fallingSpeed += 0.01;
+            if (this.fallingSpeed > 0.2) {
+                this.fallingSpeed = 0.2;
+            }
         }
         if (this.up) {
             this.speed.y -= this.acceleration;
@@ -95,7 +107,7 @@ export class Player{
         }
     
         if (this.mixer != undefined) {
-            this.mixer.update(0.15 * Math.sqrt(this.speed.x * this.speed.x + this.speed.y * this.speed.y));
+            this.mixer.update(0.17 * Math.max(Math.abs(this.speed.x), Math.abs(this.speed.y)));
             if (Math.sqrt(this.speed.x * this.speed.x + this.speed.y * this.speed.y) == 0){
                 this.walkAction.stop();
                 this.stillAction.play();
@@ -106,11 +118,38 @@ export class Player{
             }
         }
 
-        checkforCollision();
+    }
 
+    resetPos() {
+        this.mesh.position.set(0, 2, 0);
+        this.isGrounded = false;
+    }
+
+    update() {
         this.mesh.position.x += this.speed.x;
         this.mesh.position.z += this.speed.y;
+        if (this.grounded) {
+            this.fallingSpeed = 0;
+        }
+        this.mesh.position.y -= this.fallingSpeed;
+        if (this.mesh.position.y < -10) {
+            this.resetPos();
+        }
+    }
 
+    input (keys, mouse) {
+        this.up = keys.keys["w"].down;
+        this.down = keys.keys["s"].down;
+        this.left = keys.keys["a"].down;
+        this.right = keys.keys["d"].down;
+        if (this.up && this.down) {
+            this.up = false;
+            this.down = false;
+        }
+        if (this.left && this.right) {
+            this.left = false;
+            this.right = false;
+        }
     }
 
     setSpeed(speed) {
@@ -121,25 +160,45 @@ export class Player{
         this.speed.add(speed);
     }
 
-    pickUp() {
-        this.isPickedUp = true;
-        this.mesh.position.y = 4;
-    }
-
-    drop() {
-        this.isPickedUp = false;
-        this.mesh.position.y = 2;
-    }
-
     setPos(x, y, z) {
         this.mesh.position.set(x, y, z);
     }
 
-    checkforCollision() {
-        this.boundingBox.setFromCenterAndSize(
-            new THREE.Vector3(this.mesh.position.x + this.speed.x, this.mesh.position.y, this.mesh.position.z),
-            new THREE.Vector3(2,4,2)
-        );
+    isGrounded() {
+        return this.grounded;
+    }
+
+    groundedCheck(scene) {
+        let raycaster = new THREE.Raycaster(this.mesh.position, new THREE.Vector3(0, -1, 0), 0, 2);
+        var objects;
+        scene.children.forEach(element => {
+            if (element.name == "groundGroup") {
+                objects = element.children;
+            }
+        });
+        if (objects == undefined || objects == null) {
+            this.grounded = false;
+            return;
+        }
+        let intersects = raycaster.intersectObjects(objects);
+        if (intersects.length > 0) {
+            this.grounded = true;
+        } else {
+            this.grounded = false;
+        }
         
+    }
+
+    collisionCheck(newAABB) {
+        this.aabb.setXOffset(this.speed.x);
+        if (this.aabb.collides(newAABB)) {
+            this.speed.x = 0;
+        }
+        this.aabb.setXOffset(0);
+        this.aabb.setZOffset(this.speed.y);
+        if (this.aabb.collides(newAABB)) {
+            this.speed.y = 0;
+        }
+        this.aabb.setZOffset(0);
     }
 }
