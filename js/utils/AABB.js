@@ -62,8 +62,6 @@ export class AABB {
     collides(otherBox) {
         if (this.getRight() > otherBox.getLeft() &&
             this.getLeft() < otherBox.getRight() &&
-            this.getTop() > otherBox.getBottom() &&
-            this.getBottom() < otherBox.getTop() &&
             this.getFront() > otherBox.getBack() &&
             this.getBack() < otherBox.getFront()) {
                 console.log(otherBox.getLeft());

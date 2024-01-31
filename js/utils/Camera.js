@@ -6,7 +6,7 @@ export class Camera extends THREE.PerspectiveCamera {
         this.target = null;
         this.maxspeed = 0.2;
         this.lastPosition = new THREE.Vector3(0, 0, 0);
-        this.offsett = new THREE.Vector3(0, 5, 3);
+        this.offsett = new THREE.Vector3(5, 3, 7);
         this.acceleration = 0.04;
         this.deacceleration = 0.1;
         this.speed = new THREE.Vector3(0, 0, 0);

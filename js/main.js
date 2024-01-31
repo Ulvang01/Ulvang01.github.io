@@ -70,19 +70,13 @@ async function init() {
 
     player = new Player();
     scene.add(player.mesh);
+    player.mesh.layers.set(11);
     camera.setTarget(player.mesh);
 
     const light = new THREE.DirectionalLight(0xf887ff, 1);
     light.position.set(2, 20, 0);
     scene.add(light);
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 0, 0);
-    cube.type = "cube";
-    cube.layers.set(1);
-    scene.add(cube);
 
     const gltfLoader = new GLTFLoader();
     const groundGroup = new THREE.Group();
@@ -102,33 +96,17 @@ async function init() {
     roofGroup.layers.set(layers.roof);
     console.log(roofGroup.layers);
 
-    gltfLoader.load('/models/synthHouse.glb', (gltf) => {
-        var models = gltf.scene.children;
-        var floor1Names = ["Floor1"];
-        var floor2Names = ["Floor2"];
-        var roofNames = ["Roof"];
-        while (models.length > 0) {
-            const element = models[0];
-            if (floor1Names.includes(element.name)) {
-                element.layers.set(layers.floor1);
-                floor1Group.add(element);
-            } else if (floor2Names.includes(element.name)) {
-                element.layers.set(layers.floor2);
-                floor2Group.add(element);
-            } else if (roofNames.includes(element.name)) {
-                element.layers.set(layers.roof);
-                roofGroup.add(element);
-            } else {
-                element.layers.set(layers.ground);
-                groundGroup.add(element);
-            }
-        }
+    gltfLoader.load('/models/synthwaveHouse.glb', (gltf) => {
+        var models = gltf.scene
+        models.rotation.y = Math.PI;
+        models.position.set(40, 0, -80);
+        scene.add(models);
     });
 
-    console.log(groundGroup);
-    console.log(floor1Group);
-    console.log(floor2Group.layers);
-    console.log(roofGroup.layers);
+    const light2 = new THREE.PointLight(0xf887ff, 10000, 1000);
+    light2.position.set(0, 5, 0);
+    scene.add(light2);
+s
 
     groundGroup.position.set(50, 0, -80);
     floor1Group.position.set(50, 0, -80);
@@ -141,16 +119,12 @@ async function init() {
     roofGroup.rotation.y = Math.PI;
 
     scene.add(groundGroup);
-    scene.add(floor1Group);
-
 
     camera.addLayer(layers.ground);
     camera.addLayer(layers.floor1);
     camera.addLayer(layers.floor2);
     camera.addLayer(layers.roof);
-    camera.addLayer(layers.hitbox);
     camera.removeLayer(layers.roof);
-    camera.removeLayer(layers.hitbox);
     running = true;
 }   
 init();
@@ -170,7 +144,7 @@ const tick = function () {
     player.update();
     keyHandler.keys["r"].update();
     if (keyHandler.keys["r"].clicked) {
-        player.resetPos();
+        console.log(player.mesh.position);
     }
 }
 setInterval(tick, 1000 / 60);

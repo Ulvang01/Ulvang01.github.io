@@ -36,10 +36,10 @@ export class Player {
         this.hitmaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.2, transparent: true});
         this.hitcube = new THREE.Mesh(this.hitgeometry, this.hitmaterial);
         this.hitcube.name = "hitcube"
-        this.hitcube.layers.set(9);
+        this.hitcube.layers.set(11);
         person.add(this.hitcube);
 
-
+            
         this.up = false;
         this.down = false;
         this.left = false;
@@ -52,7 +52,6 @@ export class Player {
             return;
         }
         if (!this.grounded) {
-            this.fallingSpeed += 0.01;
             if (this.fallingSpeed > 0.2) {
                 this.fallingSpeed = 0.2;
             }
