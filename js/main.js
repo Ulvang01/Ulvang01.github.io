@@ -73,58 +73,21 @@ async function init() {
     player.mesh.layers.set(11);
     camera.setTarget(player.mesh);
 
-    const light = new THREE.DirectionalLight(0xf887ff, 1);
-    light.position.set(2, 20, 0);
-    scene.add(light);
-
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
 
     const gltfLoader = new GLTFLoader();
-    const groundGroup = new THREE.Group();
-    groundGroup.name = "groundGroup";
-    groundGroup.layers.set(layers.ground);
-
-    const floor1Group = new THREE.Group();
-    floor1Group.name = "floor1Group";
-    floor1Group.layers.set(layers.floor1);
-
-    const floor2Group = new THREE.Group();
-    floor2Group.name = "floor2Group";
-    floor2Group.layers.set(layers.floor2);
-
-    const roofGroup = new THREE.Group();
-    roofGroup.name = "roofGroup";
-    roofGroup.layers.set(layers.roof);
-    console.log(roofGroup.layers);
-
-    gltfLoader.load('/models/synthwaveHouse.glb', (gltf) => {
+    gltfLoader.load('/models/playground.glb', (gltf) => {
         var models = gltf.scene
-        models.rotation.y = Math.PI;
-        models.position.set(40, 0, -80);
+        models.position.set(200, 0, -200);
         scene.add(models);
     });
 
-    const light2 = new THREE.PointLight(0xf887ff, 10000, 1000);
-    light2.position.set(0, 5, 0);
-    scene.add(light2);
-s
-
-    groundGroup.position.set(50, 0, -80);
-    floor1Group.position.set(50, 0, -80);
-    floor2Group.position.set(50, 0, -80);
-    roofGroup.position.set(50, 0, -80);
-
-    groundGroup.rotation.y = Math.PI;
-    floor1Group.rotation.y = Math.PI;
-    floor2Group.rotation.y = Math.PI;
-    roofGroup.rotation.y = Math.PI;
+    const light = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(light);
 
     scene.add(groundGroup);
 
-    camera.addLayer(layers.ground);
-    camera.addLayer(layers.floor1);
-    camera.addLayer(layers.floor2);
-    camera.addLayer(layers.roof);
-    camera.removeLayer(layers.roof);
     running = true;
 }   
 init();
