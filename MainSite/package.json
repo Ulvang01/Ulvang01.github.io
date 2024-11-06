@@ -1,5 +1,11 @@
 {
+  "homepage": "https://ulvang01.github.io/PortifolioWebsite",
   "devDependencies": {
     "prettier": "^3.0.0-alpha.6"
+  },
+  "scripts": {
+    "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   }
 }
