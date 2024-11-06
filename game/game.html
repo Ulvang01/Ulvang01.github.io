@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work in Progress</title>
+  <link rel="stylesheet" href="wip.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🚧 Work in Progress 🚧</h1>
+    <p>This page is currently under development. Please check back later!</p>
+    <button onclick="goBack()" class="back-button">Go Back</button>
+  </div>
+
+  <script>
+    function goBack() {
+      if (document.referrer) {
+        window.location.replace(document.referrer);
+      } else {
+        window.location.href = '/';
+      }
+    }
+  </script>
+</body>
+</html>
