@@ -1,3 +1,3 @@
-# PortifolioWebsite
+# Portifolio website
 
-Portifolio webiste about me
+This is a website developed 

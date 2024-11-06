@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS Student Portfolio</title>
+    <link rel="stylesheet" href="info.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link" data-section="home">Top</a></li>
+          <li><a href="#cv" class="nav-link" data-section="cv">Information</a></li>
+          <li><a href="#projects" class="nav-link" data-section="projects">Projects</a></li>
+          <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+        </ul>
+        <ul class="nav-game-mode">
+          <li><a href="game.html" class="game-mode-link">Game Mode</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section id="home">
+      <div class="welcome">
+        <h2>Welcome!</h2>
+        <p>
+          Hi, I'm Christoffer Ulvang Thorvaldsen, a dedicated Computer Science
+          student with a strong passion for software development and innovation.
+          My journey in programming began in 2015, and I have continuously
+          developed my skills through formal education and self-study.
+        </p>
+      </div>
+    </section>
+
+    <section id="cv">
+      <div class="cv-content">
+        <div class="cv-section">
+          <p class="cv-tittle"><strong>Education:</strong></p>
+          <ul id="education-list" class="education-list"></ul>
+        </div>
+
+        <div class="cv-section">
+          <p class="cv-title"><strong>Skills:</strong></p>
+          <div id="skills-list" class="skills-list"></div>
+
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <p class="cv-title"><strong>Experience:</strong></p>
+          <ul id="experience-list" class="experience-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2>Projects</h2>
+      
+      <div class="project-category" id="featured-projects">
+        <h3>Featured GitHub Repos</h3>
+        <div class="project-list"></div>
+      </div>
+    
+      <div class="project-category" id="unity-projects">
+        <h3>Unity Projects</h3>
+        <div class="project-list"></div>
+      </div>
+    
+      <div class="project-category" id="other-projects">
+        <h3>Other Projects</h3>
+        <div class="project-list"></div>
+      </div>
+    </section>
+    
+
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <p>Email: christofferut@gmail.com</p>
+      <p>Phone: +4740391017</p>
+      <p>
+        <a href="https://www.linkedin.com/in/christoffer-thorvaldsen-29b07925b/" target="_blank">
+          <img src="../../assets/images/linkedin.png" alt="LinkedIn" class="contact-icon">
+        </a>
+        <a href="https://github.com/Ulvang01" target="_blank">
+          <img src="../../assets/images/github-mark.png" alt="GitHub" class="contact-icon">
+        </a>
+      </p>
+    </section>
+
+    <script src="info.js"></script>
+  </body>
+</html>
