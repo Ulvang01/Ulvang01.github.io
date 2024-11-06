@@ -23,9 +23,9 @@ function navigateTo(option) {
   // Delay navigation until after animation completes
   setTimeout(() => {
     if (option === 'info') {
-      window.location.href = './info/info.html';
+      window.location.href = './src/info/info.html';
     } else if (option === 'game') {
-      window.location.href = 'game.html';
+      window.location.href = 'src/game/game.html';
     }
   }, 800); // Adjust to match the transition duration
 }
