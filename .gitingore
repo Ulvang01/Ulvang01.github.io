@@ -1,9 +1,76 @@
-# Visual Studio Code
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+out/
+coverage/
+
+# Package locks
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Logs
+logs/
+*.log
+*.log.*
+.log/
+*.pid
+*.seed
+*.pid.lock
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE and Editor settings
 .vscode/
 *.code-workspace
-
-# IntelliJ IDEA
 .idea/
 *.iml
 *.iws
-out/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Webpack and Parcel cache
+.cache/
+.parcel-cache/
+.pnp/
+.pnp.js
+
+# Sass cache
+.sass-cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Mac System Files
+*.DS_Store
+
+# Sentry CLI files
+.sentrycli
+
+# Optional npm cache directory
+.npm/
+
+# Temporary files
+*.tmp
+*.temp
+
+# GitHub
+.github/
