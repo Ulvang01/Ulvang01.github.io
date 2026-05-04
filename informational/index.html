@@ -3,19 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ulvang · Portfolio</title>
+  <title>Christoffer Ulvang</title>
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/informational.css" />
 </head>
 <body>
-  <header class="site-header">
-    <a href="../" class="back-link">← Back</a>
-    <span class="header-name">Ulvang</span>
-  </header>
 
-  <main class="info-main">
-    <!-- sections go here -->
+  <nav class="top-nav">
+    <span class="top-nav__name">Christoffer Ulvang</span>
+    <ul class="top-nav__links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <section id="about" class="section section--about">
+      <div class="section__inner">
+        <span class="about__eyebrow">Junior Software Developer</span>
+        <h1 class="about__name">Christoffer<br>Ulvang</h1>
+        <p class="about__bio">
+          I'm 24 years old and based in Trondheim, currently working as a junior software developer
+          at Tieto in the ATM section of Bantech. I hold a bachelor in Informatics from NTNU Trondheim
+          and have been programming since 2015 — starting with game development and gradually expanding
+          into full-stack software engineering.
+        </p>
+        <p class="about__bio">
+          My background spans backend, frontend, and game/rendering development.
+          I'm particularly drawn to problems where technical precision and creativity intersect.
+        </p>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <div class="section__inner">
+        <h2 class="section__title">Skills</h2>
+        <div id="skills-container"></div>
+      </div>
+    </section>
+
+    <section id="experience" class="section">
+      <div class="section__inner">
+        <h2 class="section__title">Experience</h2>
+        <div id="experience-container" class="timeline"></div>
+      </div>
+    </section>
+
+    <section id="education" class="section">
+      <div class="section__inner">
+        <h2 class="section__title">Education</h2>
+        <div id="education-container" class="timeline"></div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="section__inner">
+        <h2 class="section__title">Projects</h2>
+        <div id="projects-container"></div>
+      </div>
+    </section>
+
+    <section id="contact" class="section section--contact">
+      <div class="section__inner">
+        <h2 class="section__title">Contact</h2>
+        <div class="contact-links">
+          <a class="contact-item" href="mailto:christofferut@gmail.com">
+            <span class="contact-item__label">Email</span>
+            <span class="contact-item__value">christofferut@gmail.com</span>
+          </a>
+          <a class="contact-item" href="https://github.com/Ulvang01" target="_blank" rel="noopener">
+            <span class="contact-item__label">GitHub — Hobby</span>
+            <span class="contact-item__value">github.com/Ulvang01</span>
+          </a>
+          <a class="contact-item" href="https://github.com/ulvanchr" target="_blank" rel="noopener">
+            <span class="contact-item__label">GitHub — Work</span>
+            <span class="contact-item__value">github.com/ulvanchr</span>
+          </a>
+          <a class="contact-item" href="https://www.linkedin.com/in/christoffer-ulvang-thorvaldsen-29b07925b/" target="_blank" rel="noopener">
+            <span class="contact-item__label">LinkedIn</span>
+            <span class="contact-item__value">Christoffer Ulvang Thorvaldsen</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <footer class="site-footer">
+    <span class="site-footer__name">Christoffer Ulvang</span>
+    <span class="site-footer__year">© 2025</span>
+  </footer>
+
+  <a href="../experience/" class="experience-bubble">
+    <span class="experience-bubble__label">Experience</span>
+    <span class="experience-bubble__arrow">→</span>
+  </a>
 
   <script src="../js/informational.js" type="module"></script>
 </body>
