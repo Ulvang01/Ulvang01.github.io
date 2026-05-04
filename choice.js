@@ -33,18 +33,32 @@ function cancelZoom() {
 
 function resetPortals() {
   cancelZoom();
+
+  const iframes = [];
   document.querySelectorAll('.portal').forEach(p => {
     p.removeAttribute('style');
     p.classList.remove('portal--zooming', 'portal--expanding', 'portal--collapsing');
-    // also clear any transform left on the iframe from the zoom animation
     const iframe = p.querySelector('.portal__preview iframe');
-    if (iframe) iframe.removeAttribute('style');
+    if (iframe) {
+      iframe.removeAttribute('style');
+      iframes.push(iframe);
+    }
   });
   document.querySelector('.site-header')?.removeAttribute('style');
   document.querySelector('.portals__divider')?.removeAttribute('style');
-  // double rAF: wait for the browser to finish layout after removing inline styles
-  // before measuring clientWidth/clientHeight for scale calculation
-  requestAnimationFrame(() => requestAnimationFrame(scaleAll));
+
+  // Force each iframe to reload so its content is fresh after bfcache restore.
+  // Scale only after all iframes have fired their load event.
+  let pending = iframes.length;
+  const onLoad = () => { if (--pending === 0) scaleAll(); };
+
+  iframes.forEach(iframe => {
+    iframe.addEventListener('load', onLoad, { once: true });
+    iframe.src = iframe.getAttribute('src');
+  });
+
+  // Fallback: scale regardless after 3s in case a load event never fires
+  setTimeout(scaleAll, 3000);
 }
 
 function handleClick(e) {
