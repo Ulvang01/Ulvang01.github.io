@@ -83,7 +83,9 @@ function renderProjects(items) {
            href="${link}" target="_blank" rel="noopener noreferrer">
           <span class="project-card__category">${category}</span>
           <h3 class="project-card__title">${title}</h3>
-          <p class="project-card__desc">${description}</p>
+          <div class="project-card__desc-wrap">
+            <p class="project-card__desc">${description}</p>
+          </div>
           <div class="project-card__footer">
             <div class="project-card__tags">
               ${languages.filter(Boolean).map(l => `<span class="tag">${l}</span>`).join('')}
