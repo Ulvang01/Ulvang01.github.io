@@ -1,7 +1,7 @@
-async function load(file) {
-  const res = await fetch(`../data/${file}`);
-  return res.json();
-}
+import skills     from '../data/skills.js';
+import experience from '../data/experience.js';
+import education  from '../data/education.js';
+import projects   from '../data/projects.js';
 
 /* ── skills ── */
 function animateBars(root) {
@@ -35,7 +35,6 @@ function renderSkills(groups) {
     </div>
   `).join('');
 
-  // Collapse toggle
   container.querySelectorAll('.skill-group__header').forEach(header => {
     header.addEventListener('click', () => {
       const group = header.closest('.skill-group');
@@ -44,7 +43,6 @@ function renderSkills(groups) {
     });
   });
 
-  // Animate bars per group as they enter the viewport
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -76,11 +74,11 @@ function renderTimeline(items, containerId) {
 }
 
 /* ── projects ── */
-function renderProjects(projects) {
+function renderProjects(items) {
   const container = document.getElementById('projects-container');
   container.innerHTML = `
     <div class="projects-grid">
-      ${projects.map(({ title, description, languages, link, category }) => `
+      ${items.map(({ title, description, languages, link, category }) => `
         <a class="project-card project-card--${category}"
            href="${link}" target="_blank" rel="noopener noreferrer">
           <span class="project-card__category">${category}</span>
@@ -99,18 +97,7 @@ function renderProjects(projects) {
 }
 
 /* ── init ── */
-async function init() {
-  const [skills, experience, education, projects] = await Promise.all([
-    load('skills.json'),
-    load('experience.json'),
-    load('education.json'),
-    load('projects.json'),
-  ]);
-
-  renderSkills(skills);
-  renderTimeline(experience, 'experience-container');
-  renderTimeline(education, 'education-container');
-  renderProjects(projects);
-}
-
-init();
+renderSkills(skills);
+renderTimeline(experience, 'experience-container');
+renderTimeline(education,  'education-container');
+renderProjects(projects);

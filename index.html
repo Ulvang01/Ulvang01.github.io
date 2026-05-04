@@ -1,58 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ulvang</title>
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/choice.css" />
-</head>
-<body>
-  <div class="layout">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ulvang</title>
+        <link rel="stylesheet" href="css/base.css" />
+        <link rel="stylesheet" href="css/choice.css" />
+    </head>
+    <body>
+        <div class="layout">
+            <header class="site-header">
+                <h1 class="site-header__name">
+                    Christopher Ulvang Thorvaldsen
+                </h1>
+                <p class="site-header__tagline">
+                    Welcome. Two worlds await — pick your side.
+                </p>
+            </header>
 
-    <header class="site-header">
-      <h1 class="site-header__name">Christopher Ulvang</h1>
-      <p class="site-header__tagline">Welcome.<br>Two worlds await — pick your side.</p>
-    </header>
+            <main class="portals">
+                <a class="portal" href="experience/">
+                    <div class="portal__preview">
+                        <iframe
+                            src="experience/"
+                            tabindex="-1"
+                            aria-hidden="true"
+                        ></iframe>
+                    </div>
+                    <div class="portal__vignette"></div>
+                    <div class="portal__content">
+                        <span class="portal__eyebrow"
+                            >Enter the experience</span
+                        >
+                        <h2 class="portal__title">The Craft</h2>
+                        <p class="portal__body">
+                            Step into an interactive world built from code and
+                            pixels. A living showcase of rendering, simulation,
+                            and creative engineering.
+                        </p>
+                        <span class="portal__cta">Step through →</span>
+                    </div>
+                </a>
 
-    <main class="portals">
+                <div class="portals__divider"></div>
 
-      <a class="portal" href="experience/">
-        <div class="portal__preview">
-          <iframe src="experience/" tabindex="-1" aria-hidden="true"></iframe>
+                <a class="portal" href="informational/">
+                    <div class="portal__preview">
+                        <iframe
+                            src="informational/"
+                            tabindex="-1"
+                            aria-hidden="true"
+                        ></iframe>
+                    </div>
+                    <div class="portal__vignette"></div>
+                    <div class="portal__content">
+                        <span class="portal__eyebrow"
+                            >The straightforward path</span
+                        >
+                        <h2 class="portal__title">The Portfolio</h2>
+                        <p class="portal__body">
+                            Clear, readable, no theatrics. Skills, projects, and
+                            contact. Everything you need to know, exactly where
+                            you'd expect it.
+                        </p>
+                        <span class="portal__cta">Enter here →</span>
+                    </div>
+                </a>
+            </main>
         </div>
-        <div class="portal__vignette"></div>
-        <div class="portal__content">
-          <span class="portal__eyebrow">Enter the experience</span>
-          <h2 class="portal__title">The Craft</h2>
-          <p class="portal__body">
-            Step into an interactive world built from code and pixels.
-            A living showcase of rendering, simulation, and creative engineering.
-          </p>
-          <span class="portal__cta">Step through →</span>
-        </div>
-      </a>
-
-      <div class="portals__divider"></div>
-
-      <a class="portal" href="informational/">
-        <div class="portal__preview">
-          <iframe src="informational/" tabindex="-1" aria-hidden="true"></iframe>
-        </div>
-        <div class="portal__vignette"></div>
-        <div class="portal__content">
-          <span class="portal__eyebrow">The straightforward path</span>
-          <h2 class="portal__title">The Portfolio</h2>
-          <p class="portal__body">
-            Clear, readable, no theatrics. Skills, projects, and contact.
-            Everything you need to know, exactly where you'd expect it.
-          </p>
-          <span class="portal__cta">Enter here →</span>
-        </div>
-      </a>
-
-    </main>
-  </div>
-  <script src="js/choice.js" type="module"></script>
-</body>
+        <script src="js/choice.js" type="module"></script>
+    </body>
 </html>
