@@ -1,0 +1,23 @@
+export default [
+  {
+    "title": "Junior Software Developer",
+    "location": "Trondheim, Norway",
+    "year": "2025 — present",
+    "org": "Tieto · Bantech ATM",
+    "description": "Working in the ATM section of Bantech Tieto, developing and maintaining software for banking infrastructure."
+  },
+  {
+    "title": "Operator",
+    "location": "Mosjøen, Norway",
+    "year": "2022 — 2025",
+    "org": "Alcoa · Anode Factory",
+    "description": "Technical maintenance and robotics in a demanding industrial environment. Worked with advanced robots used in anode production alongside a close-knit team."
+  },
+  {
+    "title": "Sales Assistant",
+    "location": "Mosjøen, Norway",
+    "year": "2020 — 2021",
+    "org": "Elkjøp",
+    "description": "Customer service and sales within consumer electronics. Translated technical specifications into plain language for customers."
+  }
+];
