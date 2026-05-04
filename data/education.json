@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Bachelor in Informatics",
+    "year": "2022 — 2025",
+    "location": "NTNU, Trondheim",
+    "description": "Focus on software development, algorithms, databases, system architecture, and web development. Bachelor thesis: an educational Android game in Kotlin using the Model-View-Intent (MVI) architecture."
+  },
+  {
+    "title": "Game Development, C# / Unity",
+    "year": "2021 — 2022",
+    "location": "Fana Folkehøgskole, Bergen",
+    "description": "Full-year programme focused on game programming in C# and Unity, with an introduction to the game development industry."
+  },
+  {
+    "title": "General Studies, Science Track",
+    "year": "2018 — 2021",
+    "location": "Mosjøen Videregående",
+    "description": "Physics 2, Maths R2, Chemistry 2, Biology 1. Also completed German 2, A2 certified."
+  }
+]
