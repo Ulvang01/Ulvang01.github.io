@@ -1,60 +1,168 @@
-.choice-screen {
-  min-height: 100vh;
+/* ── page layout ── */
+.layout {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
-  padding: 2rem;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.site-title {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--color-accent);
-}
-
-.site-subtitle {
-  font-size: 1rem;
-  opacity: 0.5;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.choice-nav {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.choice-card {
+/* ── header ── */
+.site-header {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  width: 220px;
-  padding: 2rem 1.5rem;
-  border: 1px solid rgba(240, 240, 240, 0.12);
+  padding: 2rem 2rem 1.75rem;
+  border-bottom: 1px solid rgba(240, 240, 240, 0.07);
+  text-align: center;
+}
+
+.site-header__name {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+
+.site-header__tagline {
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  opacity: 0.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── portals row ── */
+.portals {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.portals__divider {
+  width: 1px;
+  background: rgba(240, 240, 240, 0.08);
+  flex-shrink: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.portals:has(.portal--expanding) .portals__divider {
+  opacity: 0;
+}
+
+/* ── single portal ── */
+.portal {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
   text-decoration: none;
   color: var(--color-fg);
-  transition: border-color 0.2s, background 0.2s;
+  transition: flex 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.choice-card:hover {
-  border-color: var(--color-accent);
-  background: rgba(232, 201, 122, 0.05);
+.portal--expanding { flex: 100; }
+.portal--collapsing { flex: 0; }
+
+/* ── live iframe preview ── */
+.portal__preview {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
-.choice-card__label {
-  font-size: 1.25rem;
-  font-weight: 600;
+.portal__preview iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;
+  height: 900px;
+  border: none;
+  pointer-events: none;
+  transform-origin: top left;
 }
 
-.choice-card__desc {
-  font-size: 0.75rem;
-  opacity: 0.5;
-  text-align: center;
+/* ── gradient vignette so text stays readable ── */
+.portal__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0.92) 0%,
+      rgba(10, 10, 10, 0.55) 40%,
+      rgba(10, 10, 10, 0.15) 100%
+    );
+  transition: opacity 0.4s;
+}
+
+.portal:hover .portal__vignette {
+  opacity: 0.7;
+}
+
+/* ── text content ── */
+.portal__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.5rem 2rem;
+  gap: 0.6rem;
+  z-index: 1;
+}
+
+.portal__eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.portal:hover .portal__eyebrow {
+  opacity: 1;
+}
+
+.portal__title {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portal:hover .portal__title {
+  transform: translateY(-4px);
+}
+
+.portal__body {
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  line-height: 1.65;
+  opacity: 0.6;
+  max-width: 38ch;
+  transition: opacity 0.3s, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portal:hover .portal__body {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.portal__cta {
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portal:hover .portal__cta {
+  opacity: 1;
+  transform: translateY(0);
 }
