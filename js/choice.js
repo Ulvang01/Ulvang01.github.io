@@ -36,10 +36,15 @@ function resetPortals() {
   document.querySelectorAll('.portal').forEach(p => {
     p.removeAttribute('style');
     p.classList.remove('portal--zooming', 'portal--expanding', 'portal--collapsing');
+    // also clear any transform left on the iframe from the zoom animation
+    const iframe = p.querySelector('.portal__preview iframe');
+    if (iframe) iframe.removeAttribute('style');
   });
   document.querySelector('.site-header')?.removeAttribute('style');
   document.querySelector('.portals__divider')?.removeAttribute('style');
-  scaleAll();
+  // double rAF: wait for the browser to finish layout after removing inline styles
+  // before measuring clientWidth/clientHeight for scale calculation
+  requestAnimationFrame(() => requestAnimationFrame(scaleAll));
 }
 
 function handleClick(e) {
