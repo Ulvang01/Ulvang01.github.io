@@ -26,6 +26,6 @@ body {
 
     backdrop-filter: blur(6px);
 
-    pointer-events: none; /* important: doesn't block canvas input */
+    pointer-events: none;
     z-index: 10;
 }
