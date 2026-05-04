@@ -96,8 +96,25 @@ function renderProjects(items) {
   `;
 }
 
+/* ── active nav highlight ── */
+function initNav() {
+  const links    = [...document.querySelectorAll('.top-nav__links a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
+    });
+  }, { rootMargin: '-20% 0px -75% 0px' });
+
+  sections.forEach(s => s && observer.observe(s));
+}
+
 /* ── init ── */
 renderSkills(skills);
 renderTimeline(experience, 'experience-container');
 renderTimeline(education,  'education-container');
 renderProjects(projects);
+initNav();
