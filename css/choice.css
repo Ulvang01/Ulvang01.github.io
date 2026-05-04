@@ -1,0 +1,60 @@
+.choice-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 2rem;
+}
+
+.site-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+}
+
+.site-subtitle {
+  font-size: 1rem;
+  opacity: 0.5;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.choice-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.choice-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 220px;
+  padding: 2rem 1.5rem;
+  border: 1px solid rgba(240, 240, 240, 0.12);
+  text-decoration: none;
+  color: var(--color-fg);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.choice-card:hover {
+  border-color: var(--color-accent);
+  background: rgba(232, 201, 122, 0.05);
+}
+
+.choice-card__label {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.choice-card__desc {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  text-align: center;
+}
