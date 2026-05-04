@@ -114,9 +114,79 @@ function initNav() {
   sections.forEach(s => s && observer.observe(s));
 }
 
+/* ── hide nav on scroll down, reveal on scroll up ── */
+function initScrollNav() {
+  const nav = document.querySelector('.top-nav');
+  if (!nav) return;
+
+  // expose nav height as a CSS variable for padding-top and scroll-margin-top
+  const setNavHeight = () =>
+    document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
+  setNavHeight();
+  window.addEventListener('resize', setNavHeight);
+
+  // suppress hide during smooth-scroll triggered by nav link clicks
+  let navClickActive = false;
+  let navClickTimer  = null;
+
+  document.querySelectorAll('.top-nav__links a').forEach(a => {
+    a.addEventListener('click', () => {
+      navClickActive = true;
+      clearTimeout(navClickTimer);
+      // smooth-scroll to any section shouldn't take more than 1s
+      navClickTimer = setTimeout(() => { navClickActive = false; }, 1000);
+    });
+  });
+
+  let lastY   = window.scrollY;
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y    = window.scrollY;
+      const diff = y - lastY;
+
+      if (!navClickActive && diff > 4 && y > nav.offsetHeight) {
+        // scrolling down — hide
+        nav.classList.add('top-nav--hidden');
+      } else if (diff < 0) {
+        // any upward movement — show
+        nav.classList.remove('top-nav--hidden');
+      }
+
+      lastY   = y;
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
+/* ── burger menu ── */
+function initBurger() {
+  const burger  = document.querySelector('.top-nav__burger');
+  const navList = document.querySelector('.top-nav__links');
+  if (!burger || !navList) return;
+
+  burger.addEventListener('click', () => {
+    const open = navList.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+
+  // close menu when a link is tapped
+  navList.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navList.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+
 /* ── init ── */
 renderSkills(skills);
 renderTimeline(experience, 'experience-container');
 renderTimeline(education,  'education-container');
 renderProjects(projects);
 initNav();
+initScrollNav();
+initBurger();

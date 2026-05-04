@@ -9,7 +9,7 @@ let zoomPortal = null;
 
 function scaleIframe(preview) {
     const iframe = preview.querySelector("iframe");
-    const scale = Math.min(
+    const scale = Math.max(
         preview.clientWidth / IFRAME_W,
         preview.clientHeight / IFRAME_H,
     );
@@ -90,7 +90,7 @@ function handleClick(e) {
     portal.style.height = "100vh";
 
     const iframe = portal.querySelector(".portal__preview iframe");
-    const fullScale = Math.min(
+    const fullScale = Math.max(
         window.innerWidth / IFRAME_W,
         window.innerHeight / IFRAME_H,
     );
