@@ -29,3 +29,41 @@ body {
     pointer-events: none;
     z-index: 10;
 }
+
+/* ── portfolio bubble ── */
+.portfolio-bubble {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.1rem;
+    background: rgba(15, 15, 15, 0.88);
+    border: 1px solid rgba(240, 240, 240, 0.1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    z-index: 200;
+    transition: border-color 0.2s, background 0.2s, transform 0.25s;
+}
+
+.portfolio-bubble:hover {
+    border-color: var(--color-accent);
+    background: rgba(232, 201, 122, 0.07);
+    transform: translateY(-2px);
+}
+
+.portfolio-bubble__arrow {
+    color: var(--color-accent);
+    transition: transform 0.2s;
+}
+
+.portfolio-bubble:hover .portfolio-bubble__arrow {
+    transform: translateX(3px);
+}
