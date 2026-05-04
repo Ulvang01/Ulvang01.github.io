@@ -414,6 +414,14 @@ main {
     font-size: 0.8rem;
     line-height: 1.65;
     opacity: 0.5;
+    overflow: hidden;
+    max-height: calc(0.8rem * 1.65 * 3);
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+}
+
+.project-card-wrapper--open .project-card__desc {
+    max-height: 20rem;
+    opacity: 0.6;
 }
 
 .project-card__footer {
@@ -589,5 +597,11 @@ main {
         padding: 0.75rem 0;
         font-size: 0.85rem;
         opacity: 0.5;
+    }
+
+    /* always show full card text on mobile */
+    .project-card__desc {
+        max-height: none;
+        overflow: visible;
     }
 }

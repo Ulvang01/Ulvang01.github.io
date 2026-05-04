@@ -121,6 +121,27 @@ function renderProjects(items) {
     </div>
   `;
 
+    // desktop hover: freeze wrapper height, expand card via position:absolute
+    container.querySelectorAll(".project-card-wrapper").forEach((wrapper) => {
+        const card = wrapper.querySelector(".project-card");
+        let closeTimer = null;
+
+        wrapper.addEventListener("mouseenter", () => {
+            clearTimeout(closeTimer);
+            wrapper.classList.remove("project-card-wrapper--collapsing");
+            wrapper.style.height = card.offsetHeight + "px";
+            wrapper.classList.add("project-card-wrapper--open");
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+            wrapper.classList.remove("project-card-wrapper--open");
+            wrapper.classList.add("project-card-wrapper--collapsing");
+            closeTimer = setTimeout(() => {
+                wrapper.classList.remove("project-card-wrapper--collapsing");
+                wrapper.style.height = "";
+            }, 400);
+        });
+    });
 }
 
 /* ── active nav highlight ── */
