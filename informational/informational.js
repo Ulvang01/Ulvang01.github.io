@@ -114,9 +114,30 @@ function initNav() {
   sections.forEach(s => s && observer.observe(s));
 }
 
+/* ── burger menu ── */
+function initBurger() {
+  const burger  = document.querySelector('.top-nav__burger');
+  const navList = document.querySelector('.top-nav__links');
+  if (!burger || !navList) return;
+
+  burger.addEventListener('click', () => {
+    const open = navList.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+
+  // close menu when a link is tapped
+  navList.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navList.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+
 /* ── init ── */
 renderSkills(skills);
 renderTimeline(experience, 'experience-container');
 renderTimeline(education,  'education-container');
+initBurger();
 renderProjects(projects);
 initNav();
