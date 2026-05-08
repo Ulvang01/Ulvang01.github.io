@@ -45,7 +45,8 @@ plugins/cache/
 # Local development
 local/
 *.local
-.claude/settings.local.json
+.claude/settings.local.json'
+.claude/
 
 # Node modules if any
 node_modules/

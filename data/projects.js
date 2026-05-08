@@ -9,9 +9,9 @@ export default [
     },
     {
         category: "featured",
-        title: "Color Ocean — WebTek Project",
+        title: "Color Ocean - WebTek Project",
         description:
-            "A web technology project for IT2805. My primary role was the Color Scheme and Gradient Generator (ColorGen) — dynamic color generation with an intuitive user interface.",
+            "A web technology project for IT2805. My primary role was the Color Scheme and Gradient Generator (ColorGen), dynamic color generation with an intuitive user interface.",
         languages: ["HTML", "CSS", "JavaScript"],
         link: "https://github.com/Ulvang01/WebTekProject",
     },
