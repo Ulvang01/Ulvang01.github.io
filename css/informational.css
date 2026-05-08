@@ -300,8 +300,12 @@ main {
     border-bottom: 1px solid rgba(240, 240, 240, 0.06);
 }
 
-.timeline-item:first-child { padding-top: 0; }
-.timeline-item:last-child  { border-bottom: none; }
+.timeline-item:first-child {
+    padding-top: 0;
+}
+.timeline-item:last-child {
+    border-bottom: none;
+}
 
 .timeline-item__meta {
     display: flex;
@@ -318,7 +322,7 @@ main {
 }
 
 .timeline-item__date::after {
-    content: '·';
+    content: "·";
     margin-left: 0.5rem;
     opacity: 0.4;
 }
@@ -415,11 +419,18 @@ main {
     line-height: 1.65;
     opacity: 0.5;
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     max-height: calc(0.8rem * 1.65 * 3);
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+    transition:
+        max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s;
 }
 
 .project-card-wrapper--open .project-card__desc {
+    display: block;
+    -webkit-line-clamp: unset;
     max-height: 20rem;
     opacity: 0.6;
 }
@@ -601,6 +612,8 @@ main {
 
     /* always show full card text on mobile */
     .project-card__desc {
+        display: block;
+        -webkit-line-clamp: unset;
         max-height: none;
         overflow: visible;
     }
