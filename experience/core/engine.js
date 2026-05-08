@@ -6,13 +6,15 @@ const TICK_S = TICK_MS / 1000;
 export class Engine {
     #gm;
     #ctx;
+    #canvasCleanup;
     #accumulator = 0;
     #lastTime = null;
     #rafId = null;
 
-    constructor(ctx, gameManager) {
+    constructor(ctx, gameManager, canvasCleanup = null) {
         this.#ctx = ctx;
         this.#gm = gameManager;
+        this.#canvasCleanup = canvasCleanup;
     }
 
     start() {
@@ -23,6 +25,7 @@ export class Engine {
         if (this.#rafId !== null) cancelAnimationFrame(this.#rafId);
         this.#rafId = null;
         this.#gm.destroy?.();
+        this.#canvasCleanup?.();
     }
 
     #loop = (timestamp) => {
@@ -32,16 +35,22 @@ export class Engine {
         this.#lastTime = timestamp;
 
         if (frameMs > MAX_FRAME_MS) frameMs = MAX_FRAME_MS;
-
         this.#accumulator += frameMs;
 
-        while (this.#accumulator >= TICK_MS) {
-            this.#gm.update(TICK_S);
-            this.#accumulator -= TICK_MS;
+        try {
+            while (this.#accumulator >= TICK_MS) {
+                this.#gm.update(TICK_S);
+                this.#accumulator -= TICK_MS;
+            }
+            this.#gm.draw(this.#ctx, this.#accumulator / TICK_MS);
+        } catch (err) {
+            console.error(
+                "[Engine] Fatal error in game loop — engine stopped.",
+                err,
+            );
+            this.stop();
+            return;
         }
-
-        // alpha: sub-tick fraction [0, 1) — available for interpolation later
-        this.#gm.draw(this.#ctx, this.#accumulator / TICK_MS);
 
         this.#rafId = requestAnimationFrame(this.#loop);
     };
