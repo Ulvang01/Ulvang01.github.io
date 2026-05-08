@@ -13,7 +13,6 @@ export class Key {
         this.down = false;
     }
 
-    // called once per tick — advances clicked state
     tick() {
         if (this.#absorbs < this.#presses) {
             this.#absorbs++;
@@ -26,6 +25,7 @@ export class Key {
     reset() {
         this.down = false;
         this.clicked = false;
+        this.#absorbs = this.#presses; // drain any queued clicks — prevents phantom click on refocus
     }
 }
 
@@ -41,7 +41,7 @@ export class Input {
     interact;
     menu;
 
-    #bindings = new Map(); // e.code string -> Key
+    #bindings = new Map();
     #allKeys = [];
 
     constructor() {
@@ -70,12 +70,10 @@ export class Input {
         window.addEventListener("blur", this.#onBlur);
     }
 
-    // tick all keys — call once per game tick before any update logic reads input
     tick() {
         for (const key of this.#allKeys) key.tick();
     }
 
-    // remove listeners — call if the engine is stopped
     destroy() {
         window.removeEventListener("keydown", this.#onKeyDown);
         window.removeEventListener("keyup", this.#onKeyUp);
@@ -92,8 +90,6 @@ export class Input {
         this.#bindings.set(code, key);
     }
 
-    // e.code is physical key position — layout-independent (WASD stays WASD on AZERTY etc.)
-    // e.repeat is true when the OS fires key-held repeats — ignore them so one press = one click
     #onKeyDown = (e) => {
         if (e.repeat) return;
         this.#bindings.get(e.code)?.press();
@@ -103,7 +99,6 @@ export class Input {
         this.#bindings.get(e.code)?.release();
     };
 
-    // release everything if window loses focus — prevents stuck keys on alt-tab
     #onBlur = () => {
         for (const key of this.#allKeys) key.reset();
     };
