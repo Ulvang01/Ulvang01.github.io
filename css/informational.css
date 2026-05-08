@@ -421,6 +421,7 @@ main {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     max-height: calc(0.8rem * 1.65 * 3);
     transition:
@@ -431,6 +432,7 @@ main {
 .project-card-wrapper--open .project-card__desc {
     display: block;
     -webkit-line-clamp: unset;
+    line-clamp: unset;
     max-height: 20rem;
     opacity: 0.6;
 }
@@ -614,6 +616,7 @@ main {
     .project-card__desc {
         display: block;
         -webkit-line-clamp: unset;
+        line-clamp: unset;
         max-height: none;
         overflow: visible;
     }
