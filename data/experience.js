@@ -2,7 +2,7 @@ export default [
     {
         title: "Junior Software Developer",
         location: "Trondheim, Norway",
-        year: "2025 — present",
+        year: "2025 - present",
         org: "Tieto · Banktech ATM",
         description:
             "Working in the ATM section of Banktech Tieto, developing and maintaining software for banking infrastructure.",
@@ -10,7 +10,7 @@ export default [
     {
         title: "Operator",
         location: "Mosjøen, Norway",
-        year: "2022 — 2025",
+        year: "2022 - 2025",
         org: "Alcoa · Anode Factory",
         description:
             "Technical maintenance and robotics in a demanding industrial environment. Worked with advanced robots used in anode production alongside a close-knit team.",
@@ -18,7 +18,7 @@ export default [
     {
         title: "Sales Assistant",
         location: "Mosjøen, Norway",
-        year: "2020 — 2021",
+        year: "2020 - 2021",
         org: "Elkjøp",
         description:
             "Customer service and sales within consumer electronics. Translated technical specifications into plain language for customers.",
