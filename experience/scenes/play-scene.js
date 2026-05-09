@@ -6,10 +6,16 @@ import { GameManager } from "../core/game-manager.js";
 // scene-specific setup (loading assets, spawning UI, etc.) lives here.
 
 export class PlayScene extends Scene {
+    #canvas;
     #gm = null;
 
+    constructor(canvas) {
+        super();
+        this.#canvas = canvas;
+    }
+
     init() {
-        this.#gm = new GameManager();
+        this.#gm = new GameManager(this.#canvas);
     }
 
     destroy() {

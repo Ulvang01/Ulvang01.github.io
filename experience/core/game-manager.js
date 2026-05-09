@@ -12,7 +12,7 @@ export class GameManager {
     #camera = null;
     #lastW = 0;
     #lastH = 0;
-    #input = new Input();
+    #input;
     #player = new Player(new Vector2(0, 0));
     #entities = [];
     #collision = new CollisionSystem();
@@ -28,7 +28,11 @@ export class GameManager {
         config.WORLD_H,
     );
 
-    constructor() {
+    // canvas — passed through so Input can register non-passive pointer listeners
+    // directly on the canvas element instead of window, enabling preventDefault()
+    // to suppress browser scroll/zoom on mobile.
+    constructor(canvas) {
+        this.#input = new Input(canvas);
         this.#initEntities();
     }
 
@@ -153,7 +157,7 @@ export class GameManager {
         this.#drawWorld(ctx);
         this.#camera.restore(ctx);
 
-        this.#drawDebug(ctx);
+        if (config.ENV === "development") this.#drawDebug(ctx);
     }
 
     // ── Private ───────────────────────────────────────────────────────────────
@@ -214,10 +218,14 @@ export class GameManager {
         ctx.lineWidth = 2;
         ctx.strokeRect(wb.x, wb.y, wb.w, wb.h);
 
-        const viewport = this.#camera.viewport;
+        // Expand the viewport by VIEWPORT_CULL_MARGIN so entities just outside
+        // the screen edge aren't popped in/out as the camera moves.
+        const cullArea = this.#camera.viewport.expand(
+            config.VIEWPORT_CULL_MARGIN,
+        );
 
         for (const e of this.#entities) {
-            if (viewport.intersects(e.bounds)) e.draw(ctx);
+            if (cullArea.intersects(e.bounds)) e.draw(ctx);
         }
 
         // Player is always drawn (camera follows it, so it's always visible)

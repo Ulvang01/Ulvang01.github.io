@@ -1,4 +1,8 @@
 const DEFAULTS = Object.freeze({
+    // Build environment — overwritten to 'production' by scripts/patch-prod.mjs
+    // Controls debug rendering and camera padding.
+    ENV: "development",
+
     // Engine
     TPS: 60, // logic ticks per second
     MAX_FRAME_MS: 100, // spiral-of-death guard: cap raw frame delta
@@ -7,9 +11,12 @@ const DEFAULTS = Object.freeze({
     PIXEL_RATIO: window.devicePixelRatio || 1,
 
     // Camera layout
-    CAMERA_PADDING: 80, // px inset from canvas edge
-    CAMERA_COLLIDER_INSET: 120, // world units — collider is viewport shrunk by this
+    CAMERA_PADDING: 80, // px inset from canvas edge (0 in production)
+    CAMERA_COLLIDER_INSET: 120, // world units — collider is viewport shrunk by this (0 in production)
     FOLLOW_LERP_SPEED: 6, // higher = snappier target follow
+
+    // Rendering
+    VIEWPORT_CULL_MARGIN: 200, // world units added around viewport for render culling
 
     // World
     WORLD_W: 4800,

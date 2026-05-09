@@ -25,23 +25,23 @@ export class Key {
     reset() {
         this.down = false;
         this.clicked = false;
-        this.#absorbs = this.#presses; // drain any queued clicks — prevents phantom click on refocus
+        this.#absorbs = this.#presses; // drain queued clicks — prevents phantom click on refocus
     }
 }
 
 export class Input {
-    // movement
+    // Movement
     up;
     down;
     left;
     right;
 
-    // actions
+    // Actions
     attack;
     interact;
     menu;
 
-    // drag — screen-pixel delta consumed each tick, then zeroed
+    // Drag — screen-pixel delta consumed each tick, then zeroed
     #dragDx = 0;
     #dragDy = 0;
     #pendingDragDx = 0;
@@ -49,6 +49,13 @@ export class Input {
     #activePointerId = null;
     #lastPX = 0;
     #lastPY = 0;
+
+    #bindings = new Map();
+    #allKeys = [];
+
+    // The element that owns pointer down/move listeners.
+    // Keeping a ref lets destroy() remove them from the right target.
+    #pointerTarget;
 
     get dragDx() {
         return this.#dragDx;
@@ -60,10 +67,12 @@ export class Input {
         return this.#activePointerId !== null;
     }
 
-    #bindings = new Map();
-    #allKeys = [];
+    // pointerTarget should be the canvas element.
+    // Pointer down/move are registered there (non-passive so we can preventDefault),
+    // while up/cancel stay on window so a release is never missed.
+    constructor(pointerTarget = window) {
+        this.#pointerTarget = pointerTarget;
 
-    constructor() {
         this.up = this.#addKey();
         this.down = this.#addKey();
         this.left = this.#addKey();
@@ -84,18 +93,35 @@ export class Input {
         this.#bind("KeyE", this.interact);
         this.#bind("Escape", this.menu);
 
+        // Stop the browser from handling touch-scroll / pinch-zoom on the canvas.
+        // Must be set before any pointer events fire, or the browser may claim
+        // the gesture first and send pointercancel instead of pointermove.
+        if (pointerTarget instanceof HTMLElement) {
+            pointerTarget.style.touchAction = "none";
+            pointerTarget.style.userSelect = "none";
+        }
+
         window.addEventListener("keydown", this.#onKeyDown);
         window.addEventListener("keyup", this.#onKeyUp);
         window.addEventListener("blur", this.#onBlur);
-        window.addEventListener("pointerdown", this.#onPointerDown);
-        window.addEventListener("pointermove", this.#onPointerMove);
+
+        // Non-passive so preventDefault() can suppress native scroll/zoom mid-drag.
+        // Down/move on the canvas only — we own that surface.
+        pointerTarget.addEventListener("pointerdown", this.#onPointerDown, {
+            passive: false,
+        });
+        pointerTarget.addEventListener("pointermove", this.#onPointerMove, {
+            passive: false,
+        });
+
+        // Up/cancel on window — ensures release is captured even if the finger
+        // slides off the canvas element.
         window.addEventListener("pointerup", this.#onPointerUp);
         window.addEventListener("pointercancel", this.#onPointerUp);
     }
 
     tick() {
         for (const key of this.#allKeys) key.tick();
-        // snapshot accumulated drag, reset pending for next tick
         this.#dragDx = this.#pendingDragDx;
         this.#dragDy = this.#pendingDragDy;
         this.#pendingDragDx = 0;
@@ -106,11 +132,21 @@ export class Input {
         window.removeEventListener("keydown", this.#onKeyDown);
         window.removeEventListener("keyup", this.#onKeyUp);
         window.removeEventListener("blur", this.#onBlur);
-        window.removeEventListener("pointerdown", this.#onPointerDown);
-        window.removeEventListener("pointermove", this.#onPointerMove);
+
+        this.#pointerTarget.removeEventListener(
+            "pointerdown",
+            this.#onPointerDown,
+        );
+        this.#pointerTarget.removeEventListener(
+            "pointermove",
+            this.#onPointerMove,
+        );
+
         window.removeEventListener("pointerup", this.#onPointerUp);
         window.removeEventListener("pointercancel", this.#onPointerUp);
     }
+
+    // ── Private ───────────────────────────────────────────────────────────────
 
     #addKey() {
         const k = new Key();
@@ -138,16 +174,21 @@ export class Input {
         this.#pendingDragDy = 0;
     };
 
-    // Only track the first pointer down — ignore extra fingers/stylus
+    // Only track the first pointer — ignore extra fingers/stylus.
     #onPointerDown = (e) => {
         if (this.#activePointerId !== null) return;
+        e.preventDefault(); // stop browser claiming the gesture (scroll / zoom)
         this.#activePointerId = e.pointerId;
         this.#lastPX = e.clientX;
         this.#lastPY = e.clientY;
+        // Capture the pointer so move/up events keep arriving even if the finger
+        // slides off the canvas element entirely.
+        e.target.setPointerCapture(e.pointerId);
     };
 
     #onPointerMove = (e) => {
         if (e.pointerId !== this.#activePointerId) return;
+        e.preventDefault();
         this.#pendingDragDx += e.clientX - this.#lastPX;
         this.#pendingDragDy += e.clientY - this.#lastPY;
         this.#lastPX = e.clientX;
