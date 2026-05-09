@@ -7,10 +7,18 @@ export class AABB {
         this.h = h;
     }
 
-    get maxX()    { return this.x + this.w; }
-    get maxY()    { return this.y + this.h; }
-    get centerX() { return this.x + this.w * 0.5; }
-    get centerY() { return this.y + this.h * 0.5; }
+    get maxX() {
+        return this.x + this.w;
+    }
+    get maxY() {
+        return this.y + this.h;
+    }
+    get centerX() {
+        return this.x + this.w * 0.5;
+    }
+    get centerY() {
+        return this.y + this.h * 0.5;
+    }
 
     // point: { x, y }
     contains(point) {
@@ -24,9 +32,9 @@ export class AABB {
 
     intersects(other) {
         return (
-            this.x    < other.maxX &&
-            this.maxX > other.x    &&
-            this.y    < other.maxY &&
+            this.x < other.maxX &&
+            this.maxX > other.x &&
+            this.y < other.maxY &&
             this.maxY > other.y
         );
     }

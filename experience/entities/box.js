@@ -1,5 +1,5 @@
 import { Entity } from "./entity.js";
-import { AABB }   from "../utils/aabb.js";
+import { AABB } from "../utils/aabb.js";
 
 export class Box extends Entity {
     #bounds = null;
@@ -12,14 +12,19 @@ export class Box extends Entity {
         // Boxes are static — no movement physics
         super(position, Math.max(w, h));
         this.isStatic = true;
-        this.w        = w;
-        this.h        = h;
-        this.color    = color;
+        this.w = w;
+        this.h = h;
+        this.color = color;
     }
 
     // Override both get and set to invalidate bounds cache on position change
-    get position()  { return super.position; }
-    set position(v) { super.position = v; this.#bounds = null; }
+    get position() {
+        return super.position;
+    }
+    set position(v) {
+        super.position = v;
+        this.#bounds = null;
+    }
 
     get bounds() {
         if (!this.#bounds) {
@@ -45,7 +50,7 @@ export class Box extends Entity {
         ctx.fillRect(x, y, this.w, this.h);
 
         ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-        ctx.lineWidth   = 1;
+        ctx.lineWidth = 1;
         ctx.strokeRect(x + 0.5, y + 0.5, this.w - 1, this.h - 1);
     }
 }
