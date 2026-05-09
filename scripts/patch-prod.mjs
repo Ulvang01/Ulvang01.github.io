@@ -16,7 +16,8 @@ const target = resolve(__dir, "../experience/config.js");
 let src = readFileSync(target, "utf8");
 
 const patches = [
-    [/ENV:\s*'development'/, "ENV: 'production'"],
+    [/ENV:\s*"development"/, 'ENV: "production"'],
+    [/DEBUG:\s*true/, "DEBUG: false"],
     [/CAMERA_PADDING:\s*\d+/, "CAMERA_PADDING: 0"],
     [/CAMERA_COLLIDER_INSET:\s*\d+/, "CAMERA_COLLIDER_INSET: 0"],
 ];

@@ -157,7 +157,7 @@ export class GameManager {
         this.#drawWorld(ctx);
         this.#camera.restore(ctx);
 
-        if (config.ENV === "development") this.#drawDebug(ctx);
+        if (config.DEBUG) this.#drawDebug(ctx);
     }
 
     // ── Private ───────────────────────────────────────────────────────────────
