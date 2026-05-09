@@ -82,12 +82,12 @@
 .portal__preview iframe {
   position: absolute;
   top: 0;
-  left: 0;
+  left: calc(50% - 720px);
   width: 1440px;
   height: 900px;
   border: none;
   pointer-events: none;
-  transform-origin: top left;
+  transform-origin: top center;
 }
 
 /* ── edge blur: blurs + darkens the border area, fades on hover ── */
