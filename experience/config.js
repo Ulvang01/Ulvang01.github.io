@@ -1,7 +1,11 @@
 const DEFAULTS = Object.freeze({
     // Build environment — overwritten to 'production' by scripts/patch-prod.mjs
-    // Controls debug rendering and camera padding.
-    ENV: "development",
+    ENV: "production",
+
+    // Debug overlay — set to false by scripts/patch-prod.mjs before deployment.
+    // Toggle live: __config.DEBUG = false
+    // Controls: camera bounds/collider lines, entity bounding boxes, etc.
+    DEBUG: false,
 
     // Engine
     TPS: 60, // logic ticks per second
