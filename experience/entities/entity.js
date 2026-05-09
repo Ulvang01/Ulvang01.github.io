@@ -55,22 +55,54 @@ export class Entity {
     // Standard acceleration / deceleration physics.
     // Call from subclass update(dt) to advance the entity by one tick.
     // Uses this.position setter so subclass cache invalidation fires automatically.
+    //
+    // Each direction is handled independently — pressing a key accelerates that
+    // way; NOT pressing it applies deacc to bleed off any velocity in that
+    // direction.  The two sides stack when reversing: pressing LEFT while drifting
+    // right applies both the acc in the new direction AND the deacc against the
+    // old one, giving crisp, snappy direction changes.
     _stepMovement(dt) {
-        if (this.up)    this.dy -= this.acc * dt;
-        if (this.down)  this.dy += this.acc * dt;
-        if (this.left)  this.dx -= this.acc * dt;
-        if (this.right) this.dx += this.acc * dt;
-
-        this.dx = clamp(this.dx, -this.maxSpeed, this.maxSpeed);
-        this.dy = clamp(this.dy, -this.maxSpeed, this.maxSpeed);
-
-        if (!this.left && !this.right) {
-            const dec = this.deacc * dt;
-            this.dx = this.dx > 0 ? Math.max(0, this.dx - dec) : Math.min(0, this.dx + dec);
+        // ── X ────────────────────────────────────────────────────────────────
+        if (this.right) {
+            this.dx += this.acc * dt;
+            if (this.dx >  this.maxSpeed) this.dx =  this.maxSpeed;
+        } else if (this.dx > 0) {
+            this.dx -= this.deacc * dt;
+            if (this.dx < 0) this.dx = 0;
         }
-        if (!this.up && !this.down) {
-            const dec = this.deacc * dt;
-            this.dy = this.dy > 0 ? Math.max(0, this.dy - dec) : Math.min(0, this.dy + dec);
+
+        if (this.left) {
+            this.dx -= this.acc * dt;
+            if (this.dx < -this.maxSpeed) this.dx = -this.maxSpeed;
+        } else if (this.dx < 0) {
+            this.dx += this.deacc * dt;
+            if (this.dx > 0) this.dx = 0;
+        }
+
+        // ── Y ────────────────────────────────────────────────────────────────
+        if (this.down) {
+            this.dy += this.acc * dt;
+            if (this.dy >  this.maxSpeed) this.dy =  this.maxSpeed;
+        } else if (this.dy > 0) {
+            this.dy -= this.deacc * dt;
+            if (this.dy < 0) this.dy = 0;
+        }
+
+        if (this.up) {
+            this.dy -= this.acc * dt;
+            if (this.dy < -this.maxSpeed) this.dy = -this.maxSpeed;
+        } else if (this.dy < 0) {
+            this.dy += this.deacc * dt;
+            if (this.dy > 0) this.dy = 0;
+        }
+
+        // Normalise diagonal speed — without this, moving on two axes at once
+        // produces a combined vector of up to maxSpeed×√2 ≈ 41% too fast.
+        const speed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+        if (speed > this.maxSpeed) {
+            const scale = this.maxSpeed / speed;
+            this.dx *= scale;
+            this.dy *= scale;
         }
 
         // Uses the public setter so any subclass override (e.g. bounds invalidation) fires
