@@ -20,10 +20,10 @@ const DEFAULTS = Object.freeze({
     CAMERA_ZOOM_LERP_SPEED: 5, // higher = snappier zoom transition
 
     // Player
-    PLAYER_RADIUS: 20, // world units
-    PLAYER_MAX_SPEED: 600, // world units / sec
-    PLAYER_ACC: 1000, // world units / sec²
-    PLAYER_DEACC: 1600, // world units / sec²
+    PLAYER_RADIUS: 20,        // world units
+    PLAYER_MAX_SPEED: 600,    // world units / sec
+    PLAYER_ACC: 14400,        // world units / sec² — full speed in 2.5 ticks (matches Java ratio)
+    PLAYER_DEACC: 2160,       // world units / sec² — coast-to-stop in ~17 ticks (matches Java ratio)
     PLAYER_DRAG_LERP: 6,          // how quickly player chases camera during drag — lower = more hang
     PLAYER_LIFT_SCALE: 1.5,       // radius multiplier while lifted
     PLAYER_LIFT_LERP: 8,          // speed of radius animation — higher = snappier
