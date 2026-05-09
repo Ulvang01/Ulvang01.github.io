@@ -7,20 +7,12 @@ export class AABB {
         this.h = h;
     }
 
-    get maxX() {
-        return this.x + this.w;
-    }
-    get maxY() {
-        return this.y + this.h;
-    }
-    get centerX() {
-        return this.x + this.w * 0.5;
-    }
-    get centerY() {
-        return this.y + this.h * 0.5;
-    }
+    get maxX()    { return this.x + this.w; }
+    get maxY()    { return this.y + this.h; }
+    get centerX() { return this.x + this.w * 0.5; }
+    get centerY() { return this.y + this.h * 0.5; }
 
-    // point: Vector2
+    // point: { x, y }
     contains(point) {
         return (
             point.x >= this.x &&
@@ -32,15 +24,20 @@ export class AABB {
 
     intersects(other) {
         return (
-            this.x < other.maxX &&
-            this.maxX > other.x &&
-            this.y < other.maxY &&
+            this.x    < other.maxX &&
+            this.maxX > other.x    &&
+            this.y    < other.maxY &&
             this.maxY > other.y
         );
     }
 
-    // returns a new AABB shifted by a Vector2
+    // Returns a new AABB shifted by a Vector2
     translate(v) {
         return new AABB(this.x + v.x, this.y + v.y, this.w, this.h);
+    }
+
+    // Convenience: tight AABB around a circle
+    static fromCircle(cx, cy, r) {
+        return new AABB(cx - r, cy - r, r * 2, r * 2);
     }
 }

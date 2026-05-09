@@ -1,18 +1,26 @@
-import { config } from "../config.js";
-import { AABB }   from "../utils/aabb.js";
-import { Vector2 } from "../utils/vector2.js";
-import { FollowCamera2D } from "./camera/follow-camera-2d.js";
-import { Input } from "./input.js";
-import { Box }   from "../entities/box.js";
+import { config }          from "../config.js";
+import { AABB }            from "../utils/aabb.js";
+import { Vector2 }         from "../utils/vector2.js";
+import { clamp }           from "../utils/math.js";
+import { FollowCamera2D }  from "./camera/follow-camera-2d.js";
+import { CollisionSystem } from "./collision.js";
+import { Input }           from "./input.js";
+import { Box }             from "../entities/box.js";
+import { Player }          from "../entities/player.js";
 
 export class GameManager {
-    #camera   = null;
-    #lastW    = 0;
-    #lastH    = 0;
-    #entities = [];
-    #input    = new Input();
+    #camera    = null;
+    #lastW     = 0;
+    #lastH     = 0;
+    #input     = new Input();
+    #player    = new Player(new Vector2(0, 0));
+    #entities  = [];
+    #collision = new CollisionSystem();
 
-    // world is centered at origin
+    // Tracks previous drag state to detect the landing transition
+    #wasDragging = false;
+
+    // World is centered at origin
     #worldBounds = new AABB(
         -config.WORLD_W / 2,
         -config.WORLD_H / 2,
@@ -26,11 +34,11 @@ export class GameManager {
 
     #initEntities() {
         this.#entities = [
-            new Box(new Vector2(-100, -50),  70,  70, "#4a90d9"),
-            new Box(new Vector2( 120,  80),  90,  50, "#7ed321"),
-            new Box(new Vector2( 530,   0),  60,  60, "#f5a623"), // edge
-            new Box(new Vector2(-750,   0),  60,  60, "#d0021b"), // outside left
-            new Box(new Vector2(   0, 380),  60,  60, "#9b59b6"), // outside bottom
+            new Box(new Vector2(-100, -150), 70,  90,  "#4a90d9"),
+            new Box(new Vector2( 120,   80), 60,  50,  "#7ed321"),
+            new Box(new Vector2( 530,    0), 60,  160, "#f5a623"),
+            new Box(new Vector2(-750,    0), 260, 260, "#d0021b"),
+            new Box(new Vector2(   0,  480), 220, 160, "#9b59b6"),
         ];
     }
 
@@ -40,9 +48,81 @@ export class GameManager {
 
     update(dt) {
         this.#input.tick();
+
+        // Camera always processes drag and zoom first
         this.#camera?.input(this.#input);
-        this.#camera?.update(dt);
+
+        const dragging   = this.#input.isDragging;
+        const justLanded = this.#wasDragging && !dragging;
+        this.#wasDragging = dragging;
+
+        this.#player.lifted = dragging;
+
+        if (dragging) {
+            // ── Drag mode: camera leads, player hangs behind ──────────────────
+            this.#player.dx = 0;
+            this.#player.dy = 0;
+
+            const t = 1 - Math.exp(-config.PLAYER_DRAG_LERP * dt);
+            this.#player.position = this.#player.position.lerp(
+                this.#camera.position, t,
+            );
+        } else {
+            // ── Normal / sliding mode ─────────────────────────────────────────
+            // Only feed keyboard input when the player is free to move
+            if (!this.#player.sliding) {
+                this.#player.input(this.#input);
+            }
+        }
+
+        // Always update — size animation runs regardless of state
+        this.#player.update(dt);
         for (const e of this.#entities) e.update(dt);
+
+        // ── Collision ─────────────────────────────────────────────────────────
+        // On landing, force sliding=true so correctionRate kicks in immediately.
+        // The collision system will then nudge the player out gradually each tick.
+        if (justLanded) {
+            this.#player.sliding = true;
+        }
+
+        // Lifted player has collidable=false — passes through everything in the air
+        this.#collision.resolve(
+            [this.#player, ...this.#entities],
+            this.#worldBounds,
+        );
+
+        // After collision resolution, check whether the player is still inside any
+        // entity.  Use exact circle-AABB geometry so we don't flip off too early.
+        if (this.#player.sliding) {
+            // Accumulate the push normal from every entity the player overlaps.
+            // Summing normals handles being wedged between two boxes correctly.
+            let nx = 0, ny = 0, count = 0;
+            for (const e of this.#entities) {
+                const n = this.#playerPushNormal(e);
+                if (n) { nx += n.nx; ny += n.ny; count++; }
+            }
+
+            if (count === 0) {
+                // Player is fully clear — restore normal control
+                this.#player.sliding = false;
+            } else {
+                // Normalize the combined direction
+                const len = Math.sqrt(nx * nx + ny * ny) || 1;
+                nx /= len;
+                ny /= len;
+
+                // Accelerate in the exit direction, capped at slide max speed.
+                // deacc is zeroed by Player.update() while sliding, so this
+                // velocity accumulates freely until the player exits the box.
+                const acc      = config.PLAYER_SLIDE_ACC;
+                const maxSpeed = config.PLAYER_SLIDE_MAX_SPEED;
+                this.#player.dx = clamp(this.#player.dx + nx * acc * dt, -maxSpeed, maxSpeed);
+                this.#player.dy = clamp(this.#player.dy + ny * acc * dt, -maxSpeed, maxSpeed);
+            }
+        }
+
+        this.#camera?.update(dt);
     }
 
     draw(ctx, alpha) {
@@ -61,6 +141,8 @@ export class GameManager {
         this.#drawDebug(ctx);
     }
 
+    // ── Private ───────────────────────────────────────────────────────────────
+
     #syncCamera(w, h) {
         if (w === this.#lastW && h === this.#lastH) return;
         this.#lastW = w;
@@ -72,9 +154,41 @@ export class GameManager {
         if (!this.#camera) {
             this.#camera = new FollowCamera2D(screenRect);
             this.#camera.worldBounds = this.#worldBounds;
+            this.#camera.setTarget(this.#player);
         } else {
             this.#camera.screenRect = screenRect;
         }
+    }
+
+    // Exact circle-AABB overlap test (mirrors the narrow phase in collision.js).
+    // Returns the outward push normal {nx, ny} if the player overlaps the entity,
+    // or null if there is no overlap.
+    #playerPushNormal(entity) {
+        const p  = this.#player.position;
+        const r  = this.#player.size;
+        const bb = entity.bounds;
+
+        const cx = clamp(p.x, bb.x, bb.maxX);
+        const cy = clamp(p.y, bb.y, bb.maxY);
+        const dx = p.x - cx;
+        const dy = p.y - cy;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq >= r * r) return null; // not overlapping
+
+        if (distSq === 0) {
+            // Center inside box — eject along axis of least penetration
+            const dL = p.x - bb.x, dR = bb.maxX - p.x;
+            const dT = p.y - bb.y, dB = bb.maxY - p.y;
+            const m  = Math.min(dL, dR, dT, dB);
+            if (m === dL) return { nx: -1, ny:  0 };
+            if (m === dR) return { nx:  1, ny:  0 };
+            if (m === dT) return { nx:  0, ny: -1 };
+            return                { nx:  0, ny:  1 };
+        }
+
+        const dist = Math.sqrt(distSq);
+        return { nx: dx / dist, ny: dy / dist };
     }
 
     #drawWorld(ctx) {
@@ -84,9 +198,13 @@ export class GameManager {
         ctx.strokeRect(wb.x, wb.y, wb.w, wb.h);
 
         const viewport = this.#camera.viewport;
+
         for (const e of this.#entities) {
             if (viewport.intersects(e.bounds)) e.draw(ctx);
         }
+
+        // Player is always drawn (camera follows it, so it's always visible)
+        this.#player.draw(ctx);
     }
 
     #drawDebug(ctx) {
