@@ -1,5 +1,5 @@
 import { Vector2 } from "../utils/vector2.js";
-import { clamp }   from "../utils/math.js";
+import { clamp } from "../utils/math.js";
 
 let _nextId = 0;
 
@@ -10,10 +10,10 @@ export class Entity {
     id = _nextId++;
 
     // Shape / physics data — subclasses set these in their constructor
-    size     = 0;
+    size = 0;
     maxSpeed = 0;
-    acc      = 0;
-    deacc    = 0;
+    acc = 0;
+    deacc = 0;
 
     // Current velocity (world units / sec)
     dx = 0;
@@ -30,27 +30,33 @@ export class Entity {
     correctionRate = 1.0;
 
     // Directional intent — set by input() each tick
-    up    = false;
-    down  = false;
-    left  = false;
+    up = false;
+    down = false;
+    left = false;
     right = false;
 
     constructor(position, size = 0, maxSpeed = 0, acc = 0, deacc = 0) {
         this.#position = position;
-        this.size      = size;
-        this.maxSpeed  = maxSpeed;
-        this.acc       = acc;
-        this.deacc     = deacc;
+        this.size = size;
+        this.maxSpeed = maxSpeed;
+        this.acc = acc;
+        this.deacc = deacc;
     }
 
-    get position()  { return this.#position; }
+    get position() {
+        return this.#position;
+    }
 
     // Subclasses override this to invalidate their bounds cache.
     // Always call super.position = v inside the override.
-    set position(v) { this.#position = v; }
+    set position(v) {
+        this.#position = v;
+    }
 
     // Broad-phase shape type — override in subclasses with non-AABB shapes
-    get shape() { return 'aabb'; }
+    get shape() {
+        return "aabb";
+    }
 
     // Standard acceleration / deceleration physics.
     // Call from subclass update(dt) to advance the entity by one tick.
@@ -65,7 +71,7 @@ export class Entity {
         // ── X ────────────────────────────────────────────────────────────────
         if (this.right) {
             this.dx += this.acc * dt;
-            if (this.dx >  this.maxSpeed) this.dx =  this.maxSpeed;
+            if (this.dx > this.maxSpeed) this.dx = this.maxSpeed;
         } else if (this.dx > 0) {
             this.dx -= this.deacc * dt;
             if (this.dx < 0) this.dx = 0;
@@ -82,7 +88,7 @@ export class Entity {
         // ── Y ────────────────────────────────────────────────────────────────
         if (this.down) {
             this.dy += this.acc * dt;
-            if (this.dy >  this.maxSpeed) this.dy =  this.maxSpeed;
+            if (this.dy > this.maxSpeed) this.dy = this.maxSpeed;
         } else if (this.dy > 0) {
             this.dy -= this.deacc * dt;
             if (this.dy < 0) this.dy = 0;
@@ -115,8 +121,14 @@ export class Entity {
     // ── Abstract ──────────────────────────────────────────────────────────────
 
     // Returns an AABB used for culling and collision
-    get bounds() { throw new Error(`${this.constructor.name} must implement get bounds`); }
+    get bounds() {
+        throw new Error(`${this.constructor.name} must implement get bounds`);
+    }
 
-    update(dt) { throw new Error(`${this.constructor.name} must implement update(dt)`); }
-    draw(ctx)  { throw new Error(`${this.constructor.name} must implement draw(ctx)`); }
+    update(dt) {
+        throw new Error(`${this.constructor.name} must implement update(dt)`);
+    }
+    draw(ctx) {
+        throw new Error(`${this.constructor.name} must implement draw(ctx)`);
+    }
 }

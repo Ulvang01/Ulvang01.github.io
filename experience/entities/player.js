@@ -1,5 +1,5 @@
 import { Entity } from "./entity.js";
-import { AABB }   from "../utils/aabb.js";
+import { AABB } from "../utils/aabb.js";
 import { config } from "../config.js";
 
 export class Player extends Entity {
@@ -17,18 +17,26 @@ export class Player extends Entity {
         );
     }
 
-    get shape()  { return 'circle'; }
-    get radius() { return this.size; }
+    get shape() {
+        return "circle";
+    }
+    get radius() {
+        return this.size;
+    }
 
-    get lifted()  { return this.#lifted; }
+    get lifted() {
+        return this.#lifted;
+    }
     set lifted(v) {
-        this.#lifted  = v;
+        this.#lifted = v;
         this.collidable = !v;
         // Picking up always cancels the sliding state
         if (v) this.sliding = false;
     }
 
-    get sliding()  { return this.#sliding; }
+    get sliding() {
+        return this.#sliding;
+    }
     set sliding(v) {
         this.#sliding = v;
         // correctionRate = 0: collision system applies no positional correction,
@@ -39,8 +47,13 @@ export class Player extends Entity {
 
     // Override both get and set — required in JS when a parent defines the pair.
     // The setter nulls the bounds cache; super.position = v writes the backing field.
-    get position()  { return super.position; }
-    set position(v) { super.position = v; this.#bounds = null; }
+    get position() {
+        return super.position;
+    }
+    set position(v) {
+        super.position = v;
+        this.#bounds = null;
+    }
 
     get bounds() {
         if (!this.#bounds) {
@@ -51,9 +64,9 @@ export class Player extends Entity {
     }
 
     input(inp) {
-        this.up    = inp.up.down;
-        this.down  = inp.down.down;
-        this.left  = inp.left.down;
+        this.up = inp.up.down;
+        this.down = inp.down.down;
+        this.left = inp.left.down;
         this.right = inp.right.down;
     }
 
@@ -61,15 +74,15 @@ export class Player extends Entity {
     // Handles visual animation and (when applicable) movement physics.
     update(dt) {
         this.maxSpeed = config.PLAYER_MAX_SPEED;
-        this.acc      = config.PLAYER_ACC;
-        this.deacc    = config.PLAYER_DEACC;
+        this.acc = config.PLAYER_ACC;
+        this.deacc = config.PLAYER_DEACC;
 
         // Animate radius between normal and lifted size
-        const baseR   = config.PLAYER_RADIUS;
+        const baseR = config.PLAYER_RADIUS;
         const targetR = this.#lifted ? baseR * config.PLAYER_LIFT_SCALE : baseR;
-        const t       = 1 - Math.exp(-config.PLAYER_LIFT_LERP * dt);
-        this.size     = this.size + (targetR - this.size) * t;
-        this.#bounds  = null; // size changed — invalidate
+        const t = 1 - Math.exp(-config.PLAYER_LIFT_LERP * dt);
+        this.size = this.size + (targetR - this.size) * t;
+        this.#bounds = null; // size changed — invalidate
 
         if (!this.#lifted) {
             if (this.#sliding) {
@@ -92,7 +105,7 @@ export class Player extends Entity {
         ctx.fill();
 
         ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
-        ctx.lineWidth   = 1.5;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
     }
 }

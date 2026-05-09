@@ -1,13 +1,13 @@
-import { Camera }  from "./camera.js";
-import { AABB }    from "../../utils/aabb.js";
+import { Camera } from "./camera.js";
+import { AABB } from "../../utils/aabb.js";
 import { Vector2 } from "../../utils/vector2.js";
-import { config }  from "../../config.js";
+import { config } from "../../config.js";
 
 export class FollowCamera2D extends Camera {
     #target = null;
 
     #isDragging = false;
-    #baseZoom   = 1;
+    #baseZoom = 1;
     #targetZoom = 1;
 
     worldBounds = null;
@@ -22,7 +22,7 @@ export class FollowCamera2D extends Camera {
 
     get collider() {
         const vp = this.viewport;
-        const i  = config.CAMERA_COLLIDER_INSET;
+        const i = config.CAMERA_COLLIDER_INSET;
         return new AABB(vp.x + i, vp.y + i, vp.w - i * 2, vp.h - i * 2);
     }
 
@@ -39,7 +39,9 @@ export class FollowCamera2D extends Camera {
         }
 
         // Zoom out while pointer is held; zoom back on release
-        this.#targetZoom = inp.isDragging ? config.CAMERA_DRAG_ZOOM : this.#baseZoom;
+        this.#targetZoom = inp.isDragging
+            ? config.CAMERA_DRAG_ZOOM
+            : this.#baseZoom;
     }
 
     update(dt) {
@@ -47,7 +49,7 @@ export class FollowCamera2D extends Camera {
         // player can hang behind the camera position instead of the reverse.
         if (this.#target && !this.#isDragging) {
             const goal = this.#target.position ?? this.#target;
-            const t    = 1 - Math.exp(-config.FOLLOW_LERP_SPEED * dt);
+            const t = 1 - Math.exp(-config.FOLLOW_LERP_SPEED * dt);
             this.position = this.position.lerp(goal, t);
         }
 
@@ -63,13 +65,13 @@ export class FollowCamera2D extends Camera {
     #clampToWorld() {
         if (!this.worldBounds) return;
 
-        const c  = this.collider;
+        const c = this.collider;
         const wb = this.worldBounds;
         let { x, y } = this.position;
 
-        if (c.x < wb.x)       x += wb.x    - c.x;
+        if (c.x < wb.x) x += wb.x - c.x;
         if (c.maxX > wb.maxX) x += wb.maxX - c.maxX;
-        if (c.y < wb.y)       y += wb.y    - c.y;
+        if (c.y < wb.y) y += wb.y - c.y;
         if (c.maxY > wb.maxY) y += wb.maxY - c.maxY;
 
         this.position = new Vector2(x, y);

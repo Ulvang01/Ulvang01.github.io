@@ -3,19 +3,19 @@ import { config } from "../config.js";
 // Derived at startup — changing config.TPS live won't take effect until reload,
 // since altering the accumulator step mid-session would corrupt the loop state.
 const TICK_MS = 1000 / config.TPS;
-const TICK_S  = TICK_MS / 1000;
+const TICK_S = TICK_MS / 1000;
 
 export class Engine {
     #gm;
     #ctx;
     #canvasCleanup;
     #accumulator = 0;
-    #lastTime    = null;
-    #rafId       = null;
+    #lastTime = null;
+    #rafId = null;
 
     constructor(ctx, gameManager, canvasCleanup = null) {
-        this.#ctx           = ctx;
-        this.#gm            = gameManager;
+        this.#ctx = ctx;
+        this.#gm = gameManager;
         this.#canvasCleanup = canvasCleanup;
     }
 
@@ -46,7 +46,10 @@ export class Engine {
             }
             this.#gm.draw(this.#ctx, this.#accumulator / TICK_MS);
         } catch (err) {
-            console.error("[Engine] Fatal error in game loop — engine stopped.", err);
+            console.error(
+                "[Engine] Fatal error in game loop — engine stopped.",
+                err,
+            );
             this.stop();
             return;
         }

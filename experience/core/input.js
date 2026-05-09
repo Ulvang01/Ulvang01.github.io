@@ -1,5 +1,5 @@
 export class Key {
-    down    = false;
+    down = false;
     clicked = false;
     #presses = 0;
     #absorbs = 0;
@@ -23,8 +23,8 @@ export class Key {
     }
 
     reset() {
-        this.down     = false;
-        this.clicked  = false;
+        this.down = false;
+        this.clicked = false;
         this.#absorbs = this.#presses; // drain any queued clicks — prevents phantom click on refocus
     }
 }
@@ -50,41 +50,47 @@ export class Input {
     #lastPX = 0;
     #lastPY = 0;
 
-    get dragDx()     { return this.#dragDx; }
-    get dragDy()     { return this.#dragDy; }
-    get isDragging() { return this.#activePointerId !== null; }
+    get dragDx() {
+        return this.#dragDx;
+    }
+    get dragDy() {
+        return this.#dragDy;
+    }
+    get isDragging() {
+        return this.#activePointerId !== null;
+    }
 
     #bindings = new Map();
-    #allKeys  = [];
+    #allKeys = [];
 
     constructor() {
-        this.up       = this.#addKey();
-        this.down     = this.#addKey();
-        this.left     = this.#addKey();
-        this.right    = this.#addKey();
-        this.attack   = this.#addKey();
+        this.up = this.#addKey();
+        this.down = this.#addKey();
+        this.left = this.#addKey();
+        this.right = this.#addKey();
+        this.attack = this.#addKey();
         this.interact = this.#addKey();
-        this.menu     = this.#addKey();
+        this.menu = this.#addKey();
 
-        this.#bind("KeyW",      this.up);
-        this.#bind("ArrowUp",   this.up);
-        this.#bind("KeyS",      this.down);
+        this.#bind("KeyW", this.up);
+        this.#bind("ArrowUp", this.up);
+        this.#bind("KeyS", this.down);
         this.#bind("ArrowDown", this.down);
-        this.#bind("KeyA",      this.left);
+        this.#bind("KeyA", this.left);
         this.#bind("ArrowLeft", this.left);
-        this.#bind("KeyD",      this.right);
-        this.#bind("ArrowRight",this.right);
-        this.#bind("Space",     this.attack);
-        this.#bind("KeyE",      this.interact);
-        this.#bind("Escape",    this.menu);
+        this.#bind("KeyD", this.right);
+        this.#bind("ArrowRight", this.right);
+        this.#bind("Space", this.attack);
+        this.#bind("KeyE", this.interact);
+        this.#bind("Escape", this.menu);
 
-        window.addEventListener("keydown",      this.#onKeyDown);
-        window.addEventListener("keyup",        this.#onKeyUp);
-        window.addEventListener("blur",         this.#onBlur);
-        window.addEventListener("pointerdown",  this.#onPointerDown);
-        window.addEventListener("pointermove",  this.#onPointerMove);
-        window.addEventListener("pointerup",    this.#onPointerUp);
-        window.addEventListener("pointercancel",this.#onPointerUp);
+        window.addEventListener("keydown", this.#onKeyDown);
+        window.addEventListener("keyup", this.#onKeyUp);
+        window.addEventListener("blur", this.#onBlur);
+        window.addEventListener("pointerdown", this.#onPointerDown);
+        window.addEventListener("pointermove", this.#onPointerMove);
+        window.addEventListener("pointerup", this.#onPointerUp);
+        window.addEventListener("pointercancel", this.#onPointerUp);
     }
 
     tick() {
@@ -97,13 +103,13 @@ export class Input {
     }
 
     destroy() {
-        window.removeEventListener("keydown",      this.#onKeyDown);
-        window.removeEventListener("keyup",        this.#onKeyUp);
-        window.removeEventListener("blur",         this.#onBlur);
-        window.removeEventListener("pointerdown",  this.#onPointerDown);
-        window.removeEventListener("pointermove",  this.#onPointerMove);
-        window.removeEventListener("pointerup",    this.#onPointerUp);
-        window.removeEventListener("pointercancel",this.#onPointerUp);
+        window.removeEventListener("keydown", this.#onKeyDown);
+        window.removeEventListener("keyup", this.#onKeyUp);
+        window.removeEventListener("blur", this.#onBlur);
+        window.removeEventListener("pointerdown", this.#onPointerDown);
+        window.removeEventListener("pointermove", this.#onPointerMove);
+        window.removeEventListener("pointerup", this.#onPointerUp);
+        window.removeEventListener("pointercancel", this.#onPointerUp);
     }
 
     #addKey() {
@@ -128,8 +134,8 @@ export class Input {
     #onBlur = () => {
         for (const key of this.#allKeys) key.reset();
         this.#activePointerId = null;
-        this.#pendingDragDx   = 0;
-        this.#pendingDragDy   = 0;
+        this.#pendingDragDx = 0;
+        this.#pendingDragDy = 0;
     };
 
     // Only track the first pointer down — ignore extra fingers/stylus
