@@ -1,19 +1,24 @@
-import { PIXEL_RATIO, CAMERA_PADDING, WORLD_W, WORLD_H } from "../config.js";
-import { AABB } from "../utils/aabb.js";
+import { config } from "../config.js";
+import { AABB }   from "../utils/aabb.js";
 import { Vector2 } from "../utils/vector2.js";
 import { FollowCamera2D } from "./camera/follow-camera-2d.js";
 import { Input } from "./input.js";
-import { Box } from "../entities/box.js";
+import { Box }   from "../entities/box.js";
 
 export class GameManager {
-    #camera = null;
-    #lastW = 0;
-    #lastH = 0;
+    #camera   = null;
+    #lastW    = 0;
+    #lastH    = 0;
     #entities = [];
-    #input = new Input();
+    #input    = new Input();
 
     // world is centered at origin
-    #worldBounds = new AABB(-WORLD_W / 2, -WORLD_H / 2, WORLD_W, WORLD_H);
+    #worldBounds = new AABB(
+        -config.WORLD_W / 2,
+        -config.WORLD_H / 2,
+        config.WORLD_W,
+        config.WORLD_H,
+    );
 
     constructor() {
         this.#initEntities();
@@ -21,11 +26,11 @@ export class GameManager {
 
     #initEntities() {
         this.#entities = [
-            new Box(new Vector2(-100, -50), 70, 70, "#4a90d9"),
-            new Box(new Vector2(120, 80), 90, 50, "#7ed321"),
-            new Box(new Vector2(530, 0), 60, 60, "#f5a623"), // edge
-            new Box(new Vector2(-750, 0), 60, 60, "#d0021b"), // outside left
-            new Box(new Vector2(0, 380), 60, 60, "#9b59b6"), // outside bottom
+            new Box(new Vector2(-100, -50),  70,  70, "#4a90d9"),
+            new Box(new Vector2( 120,  80),  90,  50, "#7ed321"),
+            new Box(new Vector2( 530,   0),  60,  60, "#f5a623"), // edge
+            new Box(new Vector2(-750,   0),  60,  60, "#d0021b"), // outside left
+            new Box(new Vector2(   0, 380),  60,  60, "#9b59b6"), // outside bottom
         ];
     }
 
@@ -41,8 +46,8 @@ export class GameManager {
     }
 
     draw(ctx, alpha) {
-        const w = ctx.canvas.width / PIXEL_RATIO;
-        const h = ctx.canvas.height / PIXEL_RATIO;
+        const w = ctx.canvas.width  / config.PIXEL_RATIO;
+        const h = ctx.canvas.height / config.PIXEL_RATIO;
 
         this.#syncCamera(w, h);
 
@@ -61,7 +66,7 @@ export class GameManager {
         this.#lastW = w;
         this.#lastH = h;
 
-        const pad = CAMERA_PADDING;
+        const pad        = config.CAMERA_PADDING;
         const screenRect = new AABB(pad, pad, w - pad * 2, h - pad * 2);
 
         if (!this.#camera) {
@@ -73,13 +78,11 @@ export class GameManager {
     }
 
     #drawWorld(ctx) {
-        // world boundary
         const wb = this.#worldBounds;
         ctx.strokeStyle = "#c8a96e";
-        ctx.lineWidth = 2;
+        ctx.lineWidth   = 2;
         ctx.strokeRect(wb.x, wb.y, wb.w, wb.h);
 
-        // entities — culled against camera viewport
         const viewport = this.#camera.viewport;
         for (const e of this.#entities) {
             if (viewport.intersects(e.bounds)) e.draw(ctx);
@@ -92,12 +95,12 @@ export class GameManager {
 
         const sr = this.#camera.screenRect;
         ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
-        ctx.lineWidth = 1;
+        ctx.lineWidth   = 1;
         ctx.strokeRect(sr.x + 0.5, sr.y + 0.5, sr.w, sr.h);
 
         const col = this.#camera.collider;
-        const tl = this.#camera.worldToScreen({ x: col.x, y: col.y });
-        const br = this.#camera.worldToScreen({ x: col.maxX, y: col.maxY });
+        const tl  = this.#camera.worldToScreen({ x: col.x,    y: col.y    });
+        const br  = this.#camera.worldToScreen({ x: col.maxX, y: col.maxY });
         ctx.strokeStyle = "rgba(255, 180, 0, 0.35)";
         ctx.strokeRect(tl.x + 0.5, tl.y + 0.5, br.x - tl.x, br.y - tl.y);
 
