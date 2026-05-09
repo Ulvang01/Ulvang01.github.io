@@ -44,6 +44,11 @@ export class AABB {
         return new AABB(this.x + v.x, this.y + v.y, this.w, this.h);
     }
 
+    // Returns a new AABB expanded outward by `margin` on all sides
+    expand(margin) {
+        return new AABB(this.x - margin, this.y - margin, this.w + margin * 2, this.h + margin * 2);
+    }
+
     // Convenience: tight AABB around a circle
     static fromCircle(cx, cy, r) {
         return new AABB(cx - r, cy - r, r * 2, r * 2);
